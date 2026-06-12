@@ -10,7 +10,7 @@ class BarangController extends Controller {
     
     public function index()
     {
-        $barangs = Barang::with('kategori')->get(); 
+        $barangs = Barang::with(['kategori', 'admin'])->get(); 
         $categories = Kategori::all(); 
         
         return view('admin.kelola_barang', compact('barangs'));
@@ -23,12 +23,11 @@ class BarangController extends Controller {
 
     public function store(Request $request) {
         $request->validate([
-            'nama_barang'        => 'required|string',
-            'id_kategori'        => 'required',
-            'tahun_barang'       => 'required',
-            'bahan_barang'       => 'required',
-            'asal_barang'        => 'required',
-
+            'nama_barang'  => 'required|string',
+            'id_kategori'  => 'required',
+            'tahun_barang' => 'required',
+            'bahan_barang' => 'required',
+            'asal_barang'  => 'required',
         ]);
 
         $barang = new Barang();
@@ -37,7 +36,7 @@ class BarangController extends Controller {
         $barang->tahun_barang = $request->tahun_barang;
         $barang->bahan_barang = $request->bahan_barang;
         $barang->asal_barang = $request->asal_barang;
-        $barang->kategori_barang = $request->kategori_barang;
+        $barang->kategori_barang = $request->kategori_barang ?? '-';
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
         $barang->id_admin = session('id_admin');
@@ -55,7 +54,7 @@ class BarangController extends Controller {
 
     public function edit($id)
     {
-        $barang = Barang::findOrFail($id);
+        $barang = Barang::where('id_barang', $id)->firstOrFail();
         $categories = Kategori::all(); 
         
         return view('admin.edit_barang', compact('barang', 'categories'));
@@ -64,21 +63,22 @@ class BarangController extends Controller {
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_barang' => 'required|string',
-            'id_kategori' => 'required',
-            'tahun_barang'       => 'required',
-            'bahan_barang'       => 'required',
-            'asal_barang'        => 'required',
+            'nama_barang'  => 'required|string',
+            'id_kategori'  => 'required',
+            'tahun_barang' => 'required', 
+            'bahan_barang' => 'required', 
+            'asal_barang'  => 'required', 
         ]);
 
-        $barang = Barang::findOrFail($id);
+        $barang = Barang::where('id_barang', $id)->firstOrFail();
         
         $barang->nama_barang = $request->nama_barang;
         $barang->id_kategori = $request->id_kategori;
-        $barang->tahun_barang = $request->tahun_barang;
-        $barang->bahan_barang = $request->bahan_barang;
-        $barang->asal_barang = $request->asal_barang;
-        $barang->kategori_barang = $request->kategori_barang;
+        $barang->tahun_barang = $request->tahun_barang; 
+        $barang->bahan_barang = $request->bahan_barang; 
+        $barang->asal_barang = $request->asal_barang;   
+        
+        $barang->kategori_barang = $request->kategori_barang ?? '-';
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
         $barang->id_admin = session('id_admin');

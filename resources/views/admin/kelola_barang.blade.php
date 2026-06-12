@@ -1,17 +1,13 @@
 @extends('admin.layouts.admin')
-@section('title', 'Kelola Barang - Museum KASAD')
+@section('title', 'Kelola Koleksi - Museum KASAD')
 
 @section('content')
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between mb-6">
+
         <h1 class="text-2xl sm:text-3xl font-bold text-white">
-            Kelola Barang
+            Kelola Koleksi Museum
         </h1>
 
-        <a href="/tambah_barang"
-            class="bg-[#e2ca52] hover:bg-[#8f7626] text-black text-xs font-bold px-4 py-2.5 rounded-xl transition-all uppercase tracking-wider flex items-center space-x-2 shrink-0">
-            <i class="fas fa-plus text-[10px]"></i>
-            <span>Tambah Barang</span>
-        </a>
     </div>
 
     <div class="bg-[#111111] border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
@@ -31,7 +27,7 @@
                     @foreach ($barangs as $index => $b)
                         <tr class="hover:bg-[#141414] transition-colors">
                             <td class="px-6 py-5 font-bold text-gray-500 text-center">
-                                {{ $index + 1 }}
+                                {{ $b->id_barang }}
                             </td>
                             <td class="px-6 py-5 font-medium text-gray-200">
                                 {{ $b->nama_barang }}
@@ -43,7 +39,7 @@
                             <td class="px-6 py-5 text-xs text-gray-400 font-medium">
                                 <div class="flex items-center space-x-1.5">
                                     <i class="fa-solid fa-user-shield text-[10px] text-[#e2ca52]"></i>
-                                    <span>{{ $b->admin->username ?? 'System' }}</span>
+                                    <span>{{ $b->admin->username ?? 'Admin' }}</span>
                                 </div>
                             </td>
 
@@ -57,8 +53,7 @@
                                     </a>
 
                                     <form action="/barang/{{ $b->id_barang }}/delete" method="POST"
-                                        onsubmit="return confirm('Yakin mau hapus barang {{ $b->nama_barang }} dari museum?')"
-                                        class="inline m-0 p-0">
+                                        onsubmit="return confirm('Yakin mau hapus?')" class="inline m-0 p-0">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -85,4 +80,78 @@
             </table>
         </div>
     </div>
+    </div>
+    <div class="px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 font-montserrat">
+
+        <div class="text-xs text-gray-500 order-2 sm:order-1">
+            Menampilkan <span class="font-bold text-gray-300">{{ $barangs->firstItem() ?? 0 }}</span>
+            sampai <span class="font-bold text-gray-300">{{ $barangs->lastItem() ?? 0 }}</span>
+            dari <span class="font-bold text-[#e2ca52]">{{ $barangs->total() }}</span> koleksi
+        </div>
+
+        <nav aria-label="Page navigation example" class="flex items-center space-x-4 order-1 sm:order-2">
+            <ul class="flex -space-x-px text-sm">
+
+                <li>
+                    @if ($barangs->onFirstPage())
+                        <span
+                            class="flex items-center justify-center text-gray-600 bg-[#161616] border border-gray-800 rounded-s-xl text-sm px-3 h-9 cursor-not-allowed select-none">Previous</span>
+                    @else
+                        <a href="{{ $barangs->previousPageUrl() }}"
+                            class="flex items-center justify-center text-gray-300 bg-[#161616] border border-gray-800 hover:bg-[#1c1a12] hover:text-[#e2ca52] shadow-xs font-medium rounded-s-xl text-sm px-3 h-9 focus:outline-none transition-colors">Previous</a>
+                    @endif
+                </li>
+
+                @foreach ($barangs->getUrlRange(1, $barangs->lastPage()) as $page => $url)
+                    <li>
+                        @if ($page == $barangs->currentPage())
+                            <span aria-current="page"
+                                class="flex items-center justify-center text-black bg-[#e2ca52] border border-[#e2ca52] font-bold text-sm w-9 h-9 select-none rounded-md mx-0.5">{{ $page }}</span>
+                        @else
+                            <a href="{{ $url }}"
+                                class="flex items-center justify-center text-gray-400 bg-[#161616] border border-gray-800 hover:bg-[#1c1a12] hover:text-[#e2ca52] shadow-xs font-medium text-sm w-9 h-9 focus:outline-none transition-colors rounded-md mx-0.5">{{ $page }}</a>
+                        @endif
+                @endforeach
+
+                <li>
+                    @if ($barangs->hasMorePages())
+                        <a href="{{ $barangs->nextPageUrl() }}"
+                            class="flex items-center justify-center text-gray-300 bg-[#161616] border border-gray-800 hover:bg-[#1c1a12] hover:text-[#e2ca52] shadow-xs font-medium rounded-e-xl text-sm px-3 h-9 focus:outline-none transition-colors">Next</a>
+                    @else
+                        <span
+                            class="flex items-center justify-center text-gray-600 bg-[#161616] border border-gray-800 rounded-e-xl text-sm px-3 h-9 cursor-not-allowed select-none">Next</span>
+                    @endif
+                </li>
+            </ul>
+
+            <div class="w-32">
+                <select id="perPageSelect" onchange="changePerPage(this.value)"
+                    class="block w-full px-3 py-2 bg-[#161616] border border-gray-800 text-gray-300 text-xs rounded-xl focus:border-[#e2ca52] focus:outline-none shadow-xs cursor-pointer">
+                    <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5 per halaman</option>
+                    <option value="10" {{ request('per_page') == 10 || !request('per_page') ? 'selected' : '' }}>10 per
+                        halaman</option>
+                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25 per halaman</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50 per halaman</option>
+                </select>
+            </div>
+        </nav>
+
+    </div>
+
+    </div>
+    <script>
+        function changePerPage(value) {
+            let url = new URL(window.location.href);
+            url.searchParams.set('per_page', value);
+            url.searchParams.set('page', 1);
+            window.location.href = url.href;
+        }
+    </script>
+    <a href="/tambah_barang"
+        class="fixed bottom-6 right-6 z-50 bg-[#e2ca52] hover:bg-[#c9b347] text-black px-5 py-4 rounded-full 
+        shadow-2xl shadow-black/50 flex items-center gap-2 font-bold text-sm transition-all hover:scale-105">
+
+        <i class="fas fa-plus"></i>
+        <span>Tambah Barang</span>
+    </a>
 @endsection
