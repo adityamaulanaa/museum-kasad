@@ -62,3 +62,18 @@ Route::delete('/tiket/{id}/delete', function ($id) {
     \App\Models\Tiket::where('id_tiket', $id)->delete();
     return back()->with('success', 'Tiket berhasil dihapus!');
 });
+
+Route::get('/', function () { return view('home'); })->name('home');
+Route::get('/about', function () { return view('about'); })->name('about');
+
+// Rute Koleksi (Hanya ada SATU dan mengambil data dari database)
+Route::get('/koleksi', function () {
+    // Mengambil semua data dari tabel barang
+    $koleksi = \App\Models\Barang::all(); 
+    
+    // Mengirim variabel $koleksi ke tampilan blade
+    return view('koleksi', compact('koleksi')); 
+})->name('koleksi');
+
+Route::get('/tiket', function () { return view('tiket'); })->name('tiket');
+Route::get('/tiket/berhasil', function () { return view('tiket-berhasil'); })->name('tiket.berhasil');
