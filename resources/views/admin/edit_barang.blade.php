@@ -105,7 +105,11 @@
                                 class="text-[#d4af37]">{{ basename($barang->gambar_barang ?? 'tidak-ada-foto.jpg') }}</span>
                         </p>
                     </div>
+                    <p class="text-[11px] text-gray-500 mt-3 font-mono relative z-10"> File saat ini: <span
+                            class="text-[#d4af37]">{{ basename($barang->gambar_barang ?? 'tidak-ada-foto.jpg') }}</span>
+                    </p>
                 </div>
+        </div>
 
                 <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-800/50">
                     <a href="/kelola_barang"
@@ -120,6 +124,9 @@
 
             </form>
         </div>
+
+        </form>
+    </div>
     </div>
 
     <script>

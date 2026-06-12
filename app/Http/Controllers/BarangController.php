@@ -13,7 +13,7 @@ class BarangController extends Controller {
         $barangs = Barang::with(['kategori', 'admin'])->get(); 
         $categories = Kategori::all(); 
         
-        return view('admin.kelola_barang', compact('barangs'));
+        return view('admin.kelola_barang', compact('barangs', 'categories'));
     }
 
     public function create() {
@@ -43,8 +43,9 @@ class BarangController extends Controller {
 
         if ($request->hasFile('gambar_barang')) {
             $imageName = time() . '.' . $request->gambar_barang->extension();
-            $request->gambar_barang->move(public_path('images/barang'), $imageName);
-            $barang->gambar_barang = 'images/barang/' . $imageName;
+            // 🌟 FIX: Samakan folder tujuan ke images/koleksi
+            $request->gambar_barang->move(public_path('images/koleksi'), $imageName);
+            $barang->gambar_barang = 'images/koleksi/' . $imageName;
         }
 
         $barang->save(); 
@@ -85,8 +86,8 @@ class BarangController extends Controller {
 
         if ($request->hasFile('gambar_barang')) {
             $imageName = time() . '.' . $request->gambar_barang->extension();
-            $request->gambar_barang->move(public_path('images/barang'), $imageName);
-            $barang->gambar_barang = 'images/barang/' . $imageName;
+            $request->gambar_barang->move(public_path('images/koleksi'), $imageName);
+            $barang->gambar_barang = 'images/koleksi/' . $imageName;
         }
 
         $barang->save(); 
