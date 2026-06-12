@@ -10,10 +10,11 @@ class BarangController extends Controller {
     
     public function index()
     {
-        $barangs = Barang::with('kategori')->get(); 
+        // 🌟 Tambahkan dengan relasi admin sekalian biar gak crash di tabel utama
+        $barangs = Barang::with(['kategori', 'admin'])->get(); 
         $categories = Kategori::all(); 
         
-        return view('admin.kelola_barang', compact('barangs'));
+        return view('admin.kelola_barang', compact('barangs', 'categories'));
     }
 
     public function create() {
@@ -23,12 +24,11 @@ class BarangController extends Controller {
 
     public function store(Request $request) {
         $request->validate([
-            'nama_barang'        => 'required|string',
-            'id_kategori'        => 'required',
-            'tahun_barang'       => 'required',
-            'bahan_barang'       => 'required',
-            'asal_barang'        => 'required',
-
+            'nama_barang'  => 'required|string',
+            'id_kategori'  => 'required',
+            'tahun_barang' => 'required',
+            'bahan_barang' => 'required',
+            'asal_barang'  => 'required',
         ]);
 
         $barang = new Barang();
@@ -37,15 +37,16 @@ class BarangController extends Controller {
         $barang->tahun_barang = $request->tahun_barang;
         $barang->bahan_barang = $request->bahan_barang;
         $barang->asal_barang = $request->asal_barang;
-        $barang->kategori_barang = $request->kategori_barang;
+        $barang->kategori_barang = $request->kategori_barang ?? '-';
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
         $barang->id_admin = session('id_admin');
 
         if ($request->hasFile('gambar_barang')) {
             $imageName = time() . '.' . $request->gambar_barang->extension();
-            $request->gambar_barang->move(public_path('images/barang'), $imageName);
-            $barang->gambar_barang = 'images/barang/' . $imageName;
+            // 🌟 FIX: Samakan folder tujuan ke images/koleksi
+            $request->gambar_barang->move(public_path('images/koleksi'), $imageName);
+            $barang->gambar_barang = 'images/koleksi/' . $imageName;
         }
 
         $barang->save(); 
@@ -64,11 +65,11 @@ class BarangController extends Controller {
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_barang' => 'required|string',
-            'id_kategori' => 'required',
-            'tahun_barang'       => 'required',
-            'bahan_barang'       => 'required',
-            'asal_barang'        => 'required',
+            'nama_barang'  => 'required|string',
+            'id_kategori'  => 'required',
+            'tahun_barang' => 'required',
+            'bahan_barang' => 'required',
+            'asal_barang'  => 'required',
         ]);
 
         $barang = Barang::findOrFail($id);
@@ -78,15 +79,15 @@ class BarangController extends Controller {
         $barang->tahun_barang = $request->tahun_barang;
         $barang->bahan_barang = $request->bahan_barang;
         $barang->asal_barang = $request->asal_barang;
-        $barang->kategori_barang = $request->kategori_barang;
+        $barang->kategori_barang = $request->kategori_barang ?? '-';
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
         $barang->id_admin = session('id_admin');
 
         if ($request->hasFile('gambar_barang')) {
             $imageName = time() . '.' . $request->gambar_barang->extension();
-            $request->gambar_barang->move(public_path('images/barang'), $imageName);
-            $barang->gambar_barang = 'images/barang/' . $imageName;
+            $request->gambar_barang->move(public_path('images/koleksi'), $imageName);
+            $barang->gambar_barang = 'images/koleksi/' . $imageName;
         }
 
         $barang->save(); 
