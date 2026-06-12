@@ -8,6 +8,10 @@
             Kelola Koleksi Museum
         </h1>
 
+        <a href="/tambah_barang"
+            class="bg-[#e2ca52] hover:bg-[#8f7626] text-black text-xs font-bold px-4 py-2.5 rounded-xl transition-all uppercase tracking-wider flex items-center space-x-2 shrink-0">
+            <i class="fas fa-plus text-[10px]"></i> <span>Tambah Barang</span> </a>
+
     </div>
 
     <div class="bg-[#111111] border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
@@ -147,11 +151,4 @@
             window.location.href = url.href;
         }
     </script>
-    <a href="/tambah_barang"
-        class="fixed bottom-6 right-6 z-50 bg-[#e2ca52] hover:bg-[#c9b347] text-black px-5 py-4 rounded-full 
-        shadow-2xl shadow-black/50 flex items-center gap-2 font-bold text-sm transition-all hover:scale-105">
-
-        <i class="fas fa-plus"></i>
-        <span>Tambah Barang</span>
-    </a>
 @endsection
