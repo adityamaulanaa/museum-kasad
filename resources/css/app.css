@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@font-face {
+    font-family: 'KoPubBatang-Regular';
+    src: url('/fonts/KoPubBatang-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@theme {
+    --font-montserrat: "Montserrat", sans-serif;
+    --font-kopub: "KoPubBatang-Regular", serif;
+    
+    --color-primary: #1a1a1a; 
+}
