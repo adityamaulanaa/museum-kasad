@@ -19,11 +19,16 @@ Route::get('/dashboard', function () {
     return view('admin.dashboard', compact('totalKoleksi', 'tiketHariIni'));
 });
 
-Route::get('/kelola_barang', function () {
+Route::get('/kelola_barang', function (\Illuminate\Http\Request $request) {
     if (!session()->has('admin_login')) {
         return redirect('/login');
     }
-    return app(BarangController::class)->index(); 
+    
+    $perPage = $request->input('per_page', 10);
+    
+    $barangs = \App\Models\Barang::with(['kategori', 'admin'])->paginate($perPage);
+    
+    return view('admin.kelola_barang', compact('barangs'));
 });
 
 Route::get('/tambah_barang', function () {

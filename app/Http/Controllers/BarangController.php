@@ -10,7 +10,6 @@ class BarangController extends Controller {
     
     public function index()
     {
-        // 🌟 Tambahkan dengan relasi admin sekalian biar gak crash di tabel utama
         $barangs = Barang::with(['kategori', 'admin'])->get(); 
         $categories = Kategori::all(); 
         
@@ -56,7 +55,7 @@ class BarangController extends Controller {
 
     public function edit($id)
     {
-        $barang = Barang::findOrFail($id);
+        $barang = Barang::where('id_barang', $id)->firstOrFail();
         $categories = Kategori::all(); 
         
         return view('admin.edit_barang', compact('barang', 'categories'));
@@ -67,18 +66,19 @@ class BarangController extends Controller {
         $request->validate([
             'nama_barang'  => 'required|string',
             'id_kategori'  => 'required',
-            'tahun_barang' => 'required',
-            'bahan_barang' => 'required',
-            'asal_barang'  => 'required',
+            'tahun_barang' => 'required', 
+            'bahan_barang' => 'required', 
+            'asal_barang'  => 'required', 
         ]);
 
-        $barang = Barang::findOrFail($id);
+        $barang = Barang::where('id_barang', $id)->firstOrFail();
         
         $barang->nama_barang = $request->nama_barang;
         $barang->id_kategori = $request->id_kategori;
-        $barang->tahun_barang = $request->tahun_barang;
-        $barang->bahan_barang = $request->bahan_barang;
-        $barang->asal_barang = $request->asal_barang;
+        $barang->tahun_barang = $request->tahun_barang; 
+        $barang->bahan_barang = $request->bahan_barang; 
+        $barang->asal_barang = $request->asal_barang;   
+        
         $barang->kategori_barang = $request->kategori_barang ?? '-';
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
