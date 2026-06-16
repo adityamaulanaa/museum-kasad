@@ -77,7 +77,7 @@ class BarangController extends Controller {
         $barang->tahun_barang = $request->tahun_barang;
         $barang->bahan_barang = $request->bahan_barang;
         $barang->asal_barang = $request->asal_barang;
-        $barang->kategori_barang = $request->kategori_barang ?? '-';
+        $barang->kategori_barang = $barang->kategori->nama_kategori ?? $barang->kategori->kategori ?? '-';
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
         $barang->id_admin = session('id_admin');

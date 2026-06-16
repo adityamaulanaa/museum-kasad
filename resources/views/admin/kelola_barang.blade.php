@@ -56,11 +56,12 @@
                                         <span>Edit</span>
                                     </a>
 
-                                    <form action="/barang/{{ $b->id_barang }}/delete" method="POST"
-                                        onsubmit="return confirm('Yakin mau hapus?')" class="inline m-0 p-0">
+                                    <form action="/barang/{{ $b->id_barang }}/delete" method="POST" class="inline m-0 p-0">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
+
+                                        <button type="button"
+                                            onclick="picuKonfirmasi(this, 'Hapus Koleksi', 'Apakah Anda yakin ingin menghapus barang {{ $b->nama_barang }} dari database museum?', 'bg-red-600 hover:bg-red-700')"
                                             class="bg-red-950/40 hover:bg-red-900 border border-red-900/60 text-red-400 text-[10px] font-bold px-3 py-2 rounded-lg transition-all uppercase tracking-tighter flex items-center space-x-1 shrink-0 cursor-pointer">
                                             <i class="fa-solid fa-trash-can"></i>
                                             <span>Hapus</span>
