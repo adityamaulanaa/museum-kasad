@@ -17,7 +17,7 @@
         },
         tanggal: '',
         errorHari: false,
-        metodeBayar: 'transfer',
+        metodeBayar: 'Transfer Bank',
         
         // Fungsi Validasi Hari (Hanya Senin=1, Selasa=2, Rabu=3)
         validasiHari(e) {
@@ -60,8 +60,14 @@
     <div class="container mx-auto px-6 md:px-12 relative z-10">
         <h1 class="text-3xl md:text-4xl font-serif text-yellow-500 tracking-widest mb-10 text-center">PEMESANAN TIKET</h1>
 
-        <div class="flex flex-col lg:flex-row gap-10">
+        <form action="{{ route('tiket.store') }}" method="POST" class="flex flex-col lg:flex-row gap-10">
+            @csrf
             
+            <input type="hidden" name="total_harga" :value="totalHarga">
+            <input type="hidden" name="jumlah_dewasa" :value="tiket.dewasa.jumlah">
+            <input type="hidden" name="jumlah_mahasiswa" :value="tiket.pelajar.jumlah">
+            <input type="hidden" name="jumlah_anak" :value="tiket.anak.jumlah">
+
             <div class="w-full lg:w-2/3 space-y-10">
                 
                 <div class="bg-[#111111]/90 backdrop-blur-sm border border-gray-800 p-8 rounded-xl shadow-lg">
@@ -73,16 +79,16 @@
                     <div class="space-y-5">
                         <div>
                             <label class="block text-sm text-gray-400 mb-2 tracking-wide">Nama Lengkap</label>
-                            <input type="text" x-model="pemesan.nama" placeholder="Masukkan nama lengkap sesuai identitas" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition">
+                            <input type="text" name="nama_pengunjung" x-model="pemesan.nama" placeholder="Masukkan nama lengkap sesuai identitas" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition">
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-sm text-gray-400 mb-2 tracking-wide">Nomor Telepon / WA</label>
-                                <input type="number" x-model="pemesan.telepon" placeholder="Contoh: 08123456789" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition">
+                                <input type="number" name="no_telp" x-model="pemesan.telepon" placeholder="Contoh: 08123456789" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition">
                             </div>
                             <div>
                                 <label class="block text-sm text-gray-400 mb-2 tracking-wide">Alamat Email</label>
-                                <input type="email" x-model="pemesan.email" placeholder="Contoh: email@domain.com" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition">
+                                <input type="email" name="email" x-model="pemesan.email" placeholder="Contoh: email@domain.com" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition">
                             </div>
                         </div>
                     </div>
@@ -101,9 +107,9 @@
                                 <p class="text-gray-400 text-sm">IDR 25.000 / orang</p>
                             </div>
                             <div class="flex items-center gap-5">
-                                <button @click="if(tiket.dewasa.jumlah > 0) tiket.dewasa.jumlah--" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&minus;</button>
+                                <button type="button" @click="if(tiket.dewasa.jumlah > 0) tiket.dewasa.jumlah--" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&minus;</button>
                                 <span x-text="tiket.dewasa.jumlah" class="text-xl font-bold w-6 text-center"></span>
-                                <button @click="tiket.dewasa.jumlah++" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&plus;</button>
+                                <button type="button" @click="tiket.dewasa.jumlah++" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&plus;</button>
                             </div>
                         </div>
 
@@ -113,9 +119,9 @@
                                 <p class="text-gray-400 text-sm">IDR 15.000 / orang</p>
                             </div>
                             <div class="flex items-center gap-5">
-                                <button @click="if(tiket.pelajar.jumlah > 0) tiket.pelajar.jumlah--" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&minus;</button>
+                                <button type="button" @click="if(tiket.pelajar.jumlah > 0) tiket.pelajar.jumlah--" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&minus;</button>
                                 <span x-text="tiket.pelajar.jumlah" class="text-xl font-bold w-6 text-center"></span>
-                                <button @click="tiket.pelajar.jumlah++" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&plus;</button>
+                                <button type="button" @click="tiket.pelajar.jumlah++" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&plus;</button>
                             </div>
                         </div>
 
@@ -125,9 +131,9 @@
                                 <p class="text-gray-400 text-sm">IDR 10.000 / orang</p>
                             </div>
                             <div class="flex items-center gap-5">
-                                <button @click="if(tiket.anak.jumlah > 0) tiket.anak.jumlah--" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&minus;</button>
+                                <button type="button" @click="if(tiket.anak.jumlah > 0) tiket.anak.jumlah--" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&minus;</button>
                                 <span x-text="tiket.anak.jumlah" class="text-xl font-bold w-6 text-center"></span>
-                                <button @click="tiket.anak.jumlah++" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&plus;</button>
+                                <button type="button" @click="tiket.anak.jumlah++" class="w-10 h-10 rounded-full bg-gray-800 hover:bg-yellow-500 hover:text-black transition flex items-center justify-center text-xl font-bold focus:outline-none">&plus;</button>
                             </div>
                         </div>
                     </div>
@@ -140,7 +146,7 @@
                     </h2>
                     
                     <div class="relative">
-                        <input type="date" x-model="tanggal" @change="validasiHari($event)" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition cursor-pointer [color-scheme:dark]">
+                        <input type="date" name="tgl_kunjungan" x-model="tanggal" @change="validasiHari($event)" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition cursor-pointer [color-scheme:dark]">
                         
                         <div x-show="errorHari" x-transition class="mt-3 flex items-center gap-2 text-red-500 bg-red-500/10 p-3 rounded border border-red-500/20" style="display: none;">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -157,16 +163,16 @@
                     
                     <div class="flex flex-col sm:flex-row gap-4">
                         <div class="relative w-full sm:w-1/2">
-                            <select x-model="metodeBayar" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white appearance-none focus:outline-none focus:border-yellow-500 cursor-pointer">
-                                <option value="transfer">Bank Transfer</option>
-                                <option value="qris">QRIS</option>
+                            <select name="metode_pembayaran" x-model="metodeBayar" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white appearance-none focus:outline-none focus:border-yellow-500 cursor-pointer">
+                                <option value="Transfer Bank">Bank Transfer</option>
+                                <option value="QRIS">QRIS</option>
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                         </div>
 
-                        <div x-show="metodeBayar === 'transfer'" class="w-full sm:w-1/2">
+                        <div x-show="metodeBayar === 'Transfer Bank'" class="w-full sm:w-1/2">
                             <input type="text" placeholder="Masukkan Nomor Rekening" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition">
                         </div>
                     </div>
@@ -213,6 +219,7 @@
                     </div>
 
                     <button 
+                        type="submit"
                         :disabled="!isFormValid"
                         :class="!isFormValid ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-400 text-black hover:-translate-y-1 shadow-lg shadow-yellow-500/20'"
                         class="w-full py-4 rounded-lg font-bold tracking-widest transition-all duration-300"
@@ -226,8 +233,7 @@
                 </div>
             </div>
 
-        </div>
-    </div>
+        </form> </div>
 </div>
 
 @include('components.footer')

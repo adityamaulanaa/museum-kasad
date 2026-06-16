@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\TiketController;
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -59,9 +60,18 @@ Route::get('/lihat_tiket', function () {
         return redirect('/login'); 
     }
     
-    $tikets = \App\Models\Tiket::all();
-    return view('admin.lihat_tiket', compact('tikets'));
+    $tiketBelumDipakai = \App\Models\Tiket::where('status_tiket', 'Belum Dipakai')
+                            ->orderBy('id_tiket', 'desc')
+                            ->get();
+
+    $tiketSudahDipakai = \App\Models\Tiket::where('status_tiket', 'Sudah Dipakai')
+                            ->orderBy('id_tiket', 'desc')
+                            ->get();
+    
+    return view('admin.lihat_tiket', compact('tiketBelumDipakai', 'tiketSudahDipakai'));
 });
+
+Route::patch('/tiket/{id}/checkin', [App\Http\Controllers\TiketController::class, 'checkIn'])->name('tiket.checkin');
 
 Route::delete('/tiket/{id}/delete', function ($id) {
     \App\Models\Tiket::where('id_tiket', $id)->delete();
@@ -80,5 +90,13 @@ Route::get('/koleksi', function () {
     return view('koleksi', compact('koleksi')); 
 })->name('koleksi');
 
-Route::get('/tiket', function () { return view('tiket'); })->name('tiket');
-Route::get('/tiket/berhasil', function () { return view('tiket-berhasil'); })->name('tiket.berhasil');
+// Rute untuk MENAMPILKAN halaman form pemesanan tiket
+Route::get('/tiket', function () { 
+    return view('tiket'); 
+})->name('tiket');
+
+// Rute untuk menangkap data saat tombol "BAYAR SEKARANG" diklik
+Route::post('/tiket/pesan', [TiketController::class, 'store'])->name('tiket.store');
+
+// Rute untuk menampilkan halaman QR Code / Tiket Berhasil
+Route::get('/tiket/berhasil/{id}', [TiketController::class, 'sukses'])->name('tiket.sukses');

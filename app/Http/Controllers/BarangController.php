@@ -36,7 +36,7 @@ class BarangController extends Controller {
         $barang->tahun_barang = $request->tahun_barang;
         $barang->bahan_barang = $request->bahan_barang;
         $barang->asal_barang = $request->asal_barang;
-        $barang->kategori_barang = $request->kategori_barang ?? '-';
+        $barang->kategori_barang = $barang->kategori->nama_kategori ?? $barang->kategori->kategori ?? '-';
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
         $barang->id_admin = session('id_admin');
@@ -65,19 +65,18 @@ class BarangController extends Controller {
         $request->validate([
             'nama_barang'  => 'required|string',
             'id_kategori'  => 'required',
-            'tahun_barang' => 'required', 
-            'bahan_barang' => 'required', 
-            'asal_barang'  => 'required', 
+            'tahun_barang' => 'required',
+            'bahan_barang' => 'required',
+            'asal_barang'  => 'required',
         ]);
 
         $barang = Barang::where('id_barang', $id)->firstOrFail();
         
         $barang->nama_barang = $request->nama_barang;
         $barang->id_kategori = $request->id_kategori;
-        $barang->tahun_barang = $request->tahun_barang; 
-        $barang->bahan_barang = $request->bahan_barang; 
-        $barang->asal_barang = $request->asal_barang;   
-        
+        $barang->tahun_barang = $request->tahun_barang;
+        $barang->bahan_barang = $request->bahan_barang;
+        $barang->asal_barang = $request->asal_barang;
         $barang->kategori_barang = $request->kategori_barang ?? '-';
         $barang->deskripsi_barang = $request->deskripsi_barang;
         

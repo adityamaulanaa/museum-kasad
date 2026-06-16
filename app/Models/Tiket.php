@@ -2,25 +2,30 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Tiket extends Model
 {
+    use HasFactory;
+
     protected $table = 'pemesanan'; 
+    protected $primaryKey = 'id_tiket';
 
-    protected $primaryKey = 'id_tiket'; 
-
-    public $timestamps = false; 
+    // TAMBAHKAN BARIS INI UNTUK NONAKTIFKAN CREATED_AT & UPDATED_AT
+    public $timestamps = false;
 
     protected $fillable = [
+        'kode_tiket', 
         'nama_pengunjung', 
-        'email', 
         'no_telp', 
+        'email', 
         'jumlah_dewasa', 
-        'jumlah_anak', 
         'jumlah_mahasiswa', 
-        'metode_pembayaran', 
+        'jumlah_anak', 
         'tgl_kunjungan', 
-        'tgl_beli'
+        'metode_pembayaran', 
+        'total_harga',
+        'status_tiket',
     ];
 }
