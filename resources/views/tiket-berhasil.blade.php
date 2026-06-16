@@ -50,7 +50,7 @@
             <div class="w-full md:w-1/3 p-8 border-t md:border-t-0 md:border-l border-yellow-600/50 flex flex-col items-center justify-center bg-black/40">
                 
                 <div class="bg-white p-3 rounded-xl mb-4 w-40 h-40 flex items-center justify-center">
-                    <img src="{{ asset('images/qrcode.png') }}" alt="QR Code" class="w-full h-full object-contain">
+                    {!! QrCode::size(130)->generate($tiket->kode_tiket) !!}
                 </div>
                 
                 <p class="text-xs text-gray-400 font-serif tracking-widest mb-1">Kode Tiket</p>

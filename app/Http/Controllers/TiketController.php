@@ -25,6 +25,7 @@ class TiketController extends Controller
         'tgl_kunjungan'     => $request->tgl_kunjungan,
         'metode_pembayaran' => $request->metode_pembayaran,
         'total_harga'       => $request->total_harga, // <- Jangan sampai terlewat
+        'status_tiket'      => 'Belum Dipakai', // <--- Pastikan baris ini
     ]);
 
         // 3. Pindah ke halaman Sukses dengan membawa ID tiket yang baru dibuat
