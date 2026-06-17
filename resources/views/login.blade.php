@@ -12,24 +12,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="min-h-screen flex items-center justify-center p-4 font-montserrat text-white bg-primary">
+<body
+    class="bg-login bg-cover bg-center bg-no-repeat bg-fixed min-h-screen flex items-center justify-center p-4 font-montserrat text-white">
 
     <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
 
-        <div class="md:col-span-5 space-y-6 items-center text-center md:text-left">
-            <div class="flex items-center space-x-3">
-                <img src="images/kasad-logo.png" alt="Museum Kasad Logo" class="h-10 w-auto object-contain">
+        <div class="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-6">
+
+            <div class="flex items-center justify-center md:justify-start w-full">
+                <img src="/images/kasad-logo.png" alt="Museum Kasad Logo" class="h-12 w-auto object-contain">
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-3 w-full">
                 <h1
                     class="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#e2ca52] tracking-wide leading-tight uppercase">
                     Selamat Datang
                 </h1>
-                <p class="text-xs sm:text-sm text-gray-400 font-medium tracking-wide max-w-sm leading-relaxed">
+                <p
+                    class="text-xs sm:text-sm text-gray-400 font-medium tracking-wide max-w-sm mx-auto md:mx-0 leading-relaxed">
                     Silahkan Login untuk melanjutkan ke Dashboard Admin Museum.
                 </p>
             </div>
+
         </div>
 
         <div
@@ -78,13 +82,7 @@
                     </div>
                 </div>
 
-                <div
-                    class="flex items-center justify-between text-[10px] font-semibold tracking-wide text-gray-500 pt-1">
-                    <label class="flex items-center space-x-2 cursor-pointer hover:text-gray-300 transition-colors">
-                        <input type="checkbox" name="remember"
-                            class="accent-[#e2ca52] rounded border-gray-800 bg-black">
-                        <span>Ingat Saya</span>
-                    </label>
+                <div class="items-left text-left text-[10px] font-semibold tracking-wide text-gray-500">
                     <a href="#" class="hover:text-[#e2ca52] transition-colors">
                         Lupa Password?
                     </a>

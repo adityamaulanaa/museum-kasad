@@ -24,10 +24,8 @@ Route::get('/kelola_barang', function (\Illuminate\Http\Request $request) {
     if (!session()->has('admin_login')) {
         return redirect('/login');
     }
-    
-    $perPage = $request->input('per_page', 10);
-    
-    $barangs = \App\Models\Barang::with(['kategori', 'admin'])->paginate($perPage);
+        
+    $barangs = \App\Models\Barang::with(['kategori', 'admin'])->get();
     
     return view('admin.kelola_barang', compact('barangs'));
 });
@@ -52,7 +50,8 @@ Route::put('/barang/{id}/update', [BarangController::class, 'update']);
 
 Route::delete('/barang/{id}/delete', function ($id) {
     \App\Models\Barang::where('id_barang', $id)->delete();
-    return back()->with('success', 'Barang berhasil dihapus dari koleksi!');
+    
+    return redirect('/kelola_barang')->with('success', 'Barang berhasil dihapus dari koleksi!');
 });
 
 Route::get('/lihat_tiket', function () {

@@ -38,20 +38,20 @@
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Tahun
                             Pembuatan / Temuan</label>
-                        <input type="number" name="tahun" required placeholder="Contoh: 1945"
+                        <input type="number" name="tahun_barang" required placeholder="Contoh: 1945"
                             class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
                     </div>
 
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Bahan</label>
-                        <input type="text" name="bahan" required placeholder="Contoh: Baja / Perunggu / Kayu"
+                        <input type="text" name="bahan_barang" required placeholder="Contoh: Baja / Perunggu / Kayu"
                             class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
                     </div>
                 </div>
 
                 <div>
                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Asal</label>
-                    <input type="text" name="asal" required
+                    <input type="text" name="asal_barang" required
                         placeholder="Contoh: Kerajaan Majapahit / Hibah Kodam Diponegoro"
                         class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
                 </div>

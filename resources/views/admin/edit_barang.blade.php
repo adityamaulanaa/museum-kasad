@@ -71,43 +71,57 @@
                         placeholder="Tuliskan latar belakang sejarah, fungsi, atau kondisi fisik barang saat ini..."
                         class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors resize-none">{{ $barang->deskripsi_barang }}</textarea>
                 </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">
+                        Foto / Gambar Koleksi
+                    </label>
 
-                <div id="dropzone"
-                    class="bg-[#161616] border border-dashed border-gray-800 rounded-xl p-4 text-center hover:border-[#d4af37]/50 transition-all relative group">
-                    <input type="file" name="gambar_barang" id="file-input"
-                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
-                    <div id="dropzone-text" class="space-y-2 transition-all relative z-10">
-                        @if ($barang->gambar_barang)
-                            <img src="{{ asset('images/koleksi/' . $barang->gambar_barang) }}" alt="Preview Koleksi"
-                                class="h-20 w-auto mx-auto rounded-lg border border-gray-800/80 shadow-md mb-2 object-cover">
-                            <p class="text-xs text-gray-300 font-medium">Klik atau seret file baru ke sini untuk mengganti
-                                foto</p>
-                        @else
-                            <i
-                                class="fas fa-cloud-upload-alt text-2xl text-gray-500 group-hover:text-[#d4af37] transition-colors"></i>
-                            <p class="text-xs text-gray-400">Klik atau seret file gambar ke sini untuk mengganti foto </p>
-                        @endif
-                        <p class="text-[10px] text-gray-600 block">PNG, JPG, JPEG (Max. 2MB)</p>
+                    <div id="dropzone"
+                        class="bg-[#161616] border border-dashed border-gray-800 rounded-xl p-4 text-center hover:border-[#d4af37]/50 transition-all relative group">
+                        <input type="file" name="gambar_barang" id="file-input"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                        <div id="dropzone-text" class="space-y-2 transition-all relative z-10">
+                            @if ($barang->gambar_barang)
+                                <img src="{{ asset('images/koleksi/' . $barang->gambar_barang) }}" alt="Preview Koleksi"
+                                    class="h-20 w-auto mx-auto rounded-lg border border-gray-800/80 shadow-md mb-2 object-cover">
+                                <p class="text-xs text-gray-300 font-medium">Klik atau seret file baru ke sini untuk
+                                    mengganti
+                                    foto</p>
+                            @else
+                                <i
+                                    class="fas fa-cloud-upload-alt text-2xl text-gray-500 group-hover:text-[#d4af37] transition-colors"></i>
+                                <p class="text-xs text-gray-400">Klik atau seret file gambar ke sini untuk mengganti foto
+                                </p>
+                            @endif
+                            <p class="text-[10px] text-gray-600 block">PNG, JPG, JPEG (Max. 2MB)</p>
+                        </div>
+                        <p class="text-[11px] text-gray-500 mt-3 font-mono relative z-10"> File saat ini: <span
+                                class="text-[#d4af37]">{{ basename($barang->gambar_barang ?? 'tidak-ada-foto.jpg') }}</span>
+                        </p>
                     </div>
-                    <p class="text-[11px] text-gray-500 mt-3 font-mono relative z-10"> File saat ini: <span
-                            class="text-[#d4af37]">{{ basename($barang->gambar_barang ?? 'tidak-ada-foto.jpg') }}</span>
-                    </p>
                 </div>
         </div>
 
         <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-800/50">
-            <a href="/kelola_barang"
-                class="text-gray-400 hover:text-white text-xs font-bold px-5 py-3 transition-colors uppercase tracking-wider">
-                Batal
-            </a>
+            <form id="form-batal-samaran" class="inline m-0 p-0">
+                <button type="button"
+                    @click=" konfirmasi($el, 'Konfirmasi Keluar', 'Apakah Anda yakin ingin keluar? Semua perubahan yang belum disimpan akan hilang.', 'bg-red-600 hover:bg-red-700');
+                    document.getElementById('global-confirm-submit-btn').onclick = function() {
+                window.location.href = '/kelola_barang';
+            };
+        "
+                    class="text-gray-400 hover:text-white text-xs font-bold px-5 py-3 transition-colors uppercase tracking-wider cursor-pointer">
+                    Batal
+                </button>
+            </form>
             <button type="submit"
                 class="bg-[#d4af37] hover:bg-[#bfa032] text-black text-xs font-bold px-6 py-3 rounded-xl transition-all uppercase tracking-wider shadow-lg shadow-[#d4af37]/10">
                 <i class="fas fa-save mr-1.5"></i> Simpan Perubahan
             </button>
         </div>
 
-            </form>
-        </div>
+        </form>
+    </div>
     </div>
 
     <script>

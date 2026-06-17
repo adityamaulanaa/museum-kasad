@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Barang;
 use App\Models\Kategori;
+
 
 class BarangController extends Controller {
     
@@ -42,15 +44,15 @@ class BarangController extends Controller {
         $barang->id_admin = session('id_admin');
 
         if ($request->hasFile('gambar_barang')) {
-            $imageName = time() . '.' . $request->gambar_barang->extension();
+            $cleanName = Str::slug($request->nama_barang);
+            $imageName = $cleanName . '-' . time() . '.' . $request->gambar_barang->extension();
             $request->gambar_barang->move(public_path('images/barang'), $imageName);
-            $barang->gambar_barang = 'images/barang/' . $imageName;
+            $barang->gambar_barang = $imageName; 
         }
+            $barang->save(); 
 
-        $barang->save(); 
-
-        return redirect('/kelola_barang')->with('success', 'Barang berhasil disimpan!');
-    }
+            return redirect('/kelola_barang')->with('success', 'Barang berhasil disimpan!');
+        }
 
     public function edit($id)
     {
@@ -83,13 +85,15 @@ class BarangController extends Controller {
         $barang->id_admin = session('id_admin');
 
         if ($request->hasFile('gambar_barang')) {
-            $imageName = time() . '.' . $request->gambar_barang->extension();
-            $request->gambar_barang->move(public_path('images/barang'), $imageName);
-            $barang->gambar_barang = 'images/barang/' . $imageName;
+            $cleanName = Str::slug($request->nama_barang);
+            $imageName = $cleanName . '-' . time() . '.' . $request->gambar_barang->extension();
+            $request->gambar_barang->move(public_path('images/koleksi'), $imageName);
+            $barang->gambar_barang = $imageName;
         }
 
         $barang->save(); 
 
         return redirect('/kelola_barang')->with('success', 'Data barang berhasil diubah!');
     }
+
 }
