@@ -15,15 +15,17 @@
         <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-white mb-2 uppercase text-center">PEMBAYARAN BERHASIL</h1>
         <p class="text-gray-300 font-serif text-lg tracking-wide text-center mb-12">Terima kasih, Tiket anda telah dipesan</p>
 
-        <div class="w-full bg-black/60 backdrop-blur-md border border-yellow-600 rounded-2xl flex flex-col md:flex-row overflow-hidden shadow-2xl">
+        <!-- Tambahkan ID tiket-card di sini agar bisa difoto oleh Javascript -->
+        <div id="tiket-card" class="w-full bg-[#111111] border border-yellow-600 rounded-2xl flex flex-col md:flex-row overflow-hidden shadow-2xl">
             
             <div class="w-full md:w-2/3 p-8 md:p-10 flex flex-col justify-center">
-                <h2 class="text-xl md:text-2xl font-serif tracking-widest text-white mb-8">Pameran Museum KASAD</h2>
+                <h2 class="text-xl md:text-2xl font-serif tracking-widest text-yellow-500 mb-8">Pameran Museum KASAD</h2>
                 
                 <div class="space-y-5 text-sm md:text-base font-medium tracking-wide text-gray-200">
                     <div class="flex items-center gap-4">
                         <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <span>{{ \Carbon\Carbon::parse($tiket->tgl_kunjungan)->translatedFormat('l, d F Y') }}</span>
+                        <!-- Format Hari Bahasa Indonesia -->
+                        <span>{{ \Carbon\Carbon::parse($tiket->tgl_kunjungan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</span>
                     </div>
                     
                     <div class="flex items-center gap-4">
@@ -48,24 +50,20 @@
             </div>
 
             <div class="w-full md:w-1/3 p-8 border-t md:border-t-0 md:border-l border-yellow-600/50 flex flex-col items-center justify-center bg-black/40">
-                
                 <div class="bg-white p-3 rounded-xl mb-4 w-40 h-40 flex items-center justify-center">
                     @php
-                        // Membuat ringkasan jumlah tiket yang dibeli
                         $rincian = [];
                         if($tiket->jumlah_dewasa > 0) $rincian[] = $tiket->jumlah_dewasa . ' Dewasa';
                         if($tiket->jumlah_mahasiswa > 0) $rincian[] = $tiket->jumlah_mahasiswa . ' Pelajar';
                         if($tiket->jumlah_anak > 0) $rincian[] = $tiket->jumlah_anak . ' Anak';
-                        
-                        $rincian_tiket = implode(', ', $rincian); // Contoh hasil: "2 Dewasa, 1 Anak"
+                        $rincian_tiket = implode(', ', $rincian);
 
-                        // Membuat ringkasan data untuk isi QR Code
                         $dataQr = json_encode([
                             'Kode' => $tiket->kode_tiket,
                             'Nama' => $tiket->nama_pengunjung,
                             'Sesi' => $tiket->sesi,
                             'Tanggal' => \Carbon\Carbon::parse($tiket->tgl_kunjungan)->format('d-m-Y'),
-                            'Tiket' => $rincian_tiket, // <--- TAMBAHAN RINCIAN DISINI
+                            'Tiket' => $rincian_tiket,
                             'Total' => 'Rp ' . number_format($tiket->total_harga, 0, ',', '.')
                         ]);
                     @endphp
@@ -77,21 +75,68 @@
                     {{ $tiket->kode_tiket }}
                 </p>
             </div>
-            
         </div>
-       <div class="mt-12 flex flex-col items-center gap-5">
-            <a href="{{ route('tiket.pdf', $tiket->id_tiket) }}" class="bg-yellow-500 hover:bg-yellow-400 text-black font-bold tracking-widest px-8 py-4 rounded-full transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] flex items-center gap-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                UNDUH TIKET (PDF)
-            </a>
+        
+        <!-- Pilihan Download -->
+        <div class="mt-12 w-full flex flex-col items-center">
+            <p class="text-gray-400 text-sm mb-4">Pilih format unduhan tiket Anda:</p>
             
-            <a href="{{ route('home') }}" class="text-sm text-gray-400 hover:text-yellow-500 transition border-b border-transparent hover:border-yellow-500 pb-1 tracking-widest mt-2">
+            <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4 w-full">
+                <!-- Tombol PDF -->
+                <a href="{{ route('tiket.pdf', $tiket->id_tiket) }}" class="bg-black border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black font-bold tracking-widest px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm w-full sm:w-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    UNDUH PDF
+                </a>
+                
+                <!-- Tombol PNG -->
+                <button type="button" onclick="unduhGambar('png')" class="bg-black border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black font-bold tracking-widest px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm w-full sm:w-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    UNDUH PNG
+                </button>
+
+                <!-- Tombol JPG -->
+                <button type="button" onclick="unduhGambar('jpg')" class="bg-black border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black font-bold tracking-widest px-6 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm w-full sm:w-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    UNDUH JPG
+                </button>
+            </div>
+
+            <a href="{{ route('home') }}" class="mt-8 text-sm text-gray-400 hover:text-yellow-500 transition border-b border-transparent hover:border-yellow-500 pb-1 tracking-widest">
                 KEMBALI KE BERANDA
             </a>
         </div>
 
     </div>
 </div>
+
+<!-- Library html2canvas untuk mengubah elemen HTML menjadi Gambar -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    function unduhGambar(format) {
+        // Ambil elemen kotak tiket
+        const tiketCard = document.getElementById('tiket-card');
+        
+        // Memproses elemen menjadi Canvas
+        html2canvas(tiketCard, {
+            scale: 2, // Menggunakan skala 2 agar kualitas gambar HD tidak pecah
+            backgroundColor: '#111111' // Memastikan background gelap
+        }).then(canvas => {
+            // Membuat link untuk unduh otomatis
+            let link = document.createElement('a');
+            link.download = 'Tiket-Museum-KASAD-{{ $tiket->kode_tiket }}.' + format;
+            
+            // Konversi canvas menjadi file PNG atau JPG
+            if(format === 'png') {
+                link.href = canvas.toDataURL('image/png');
+            } else {
+                link.href = canvas.toDataURL('image/jpeg', 0.9); // Kualitas JPG 90%
+            }
+            
+            // Picu klik otomatis pada link
+            link.click();
+        });
+    }
+</script>
 
 @include('components.footer')
 @endsection

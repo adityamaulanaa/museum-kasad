@@ -114,7 +114,7 @@
                         </tr>
                         <tr>
                             <td class="label">Tanggal Kunjungan</td>
-                            <td class="value">{{ \Carbon\Carbon::parse($tiket->tgl_kunjungan)->translatedFormat('l, d F Y') }}</td>
+                            <td class="value">{{ \Carbon\Carbon::parse($tiket->tgl_kunjungan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                         </tr>
                         <tr>
                             <td class="label">Sesi Kunjungan</td>
