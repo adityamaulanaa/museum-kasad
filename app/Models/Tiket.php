@@ -27,5 +27,7 @@ class Tiket extends Model
         'metode_pembayaran', 
         'total_harga',
         'status_tiket',
+        'sesi',
+        'expired_at',
     ];
 }

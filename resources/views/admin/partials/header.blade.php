@@ -7,7 +7,7 @@
 
         <div class="hidden sm:inline-block w-1.5 h-6 bg-[#d4af37] rounded-full"></div>
 
-        <h1 class="block md:hidden text-xs font-bold text-gray-400 uppercase">
+        <h1 class="block md:hidden text-lg font-bold text-gray-400 uppercase">
             Manajemen Museum
         </h1>
 
@@ -38,19 +38,30 @@
         <div x-show="dropdownOpen"
             class="absolute right-0 mt-3 w-56 bg-[#111111] border border-gray-800 rounded-xl py-2 z-50 font-medium"
             style="display: none;">
-            <div class="px-4 py-3">
-                <p class="text-sm text-gray-300 font-medium">
-                    {{ session('username', 'Admin Museum') }}
-                </p>
-                <p class="text-xs text-gray-500">
-                    ID: {{ session('id_admin', '-') }}
-                </p>
+            <div class="flex items-center gap-3 shrink-0 px-4 py-1">
+
+                <div
+                    class="w-8 h-8 rounded-full bg-[#d4af37]/10 flex items-center justify-center text-[#d4af37] border border-[#d4af37]/30 shrink-0">
+                    <i class="fas fa-user text-xs"></i>
+                </div>
+
+                <div class="flex flex-col min-w-0">
+                    <p class="text-xs font-semibold text-gray-200 tracking-wide truncate max-w-[140px]">
+                        {{ session('username', 'Admin Museum') }}
+                    </p>
+                    <p class="text-[10px] text-gray-500 font-mono mt-0.5">
+                        ID: {{ session('id_admin', '-') }}
+                    </p>
+                </div>
+
             </div>
+
             <div class="border-t border-gray-800 my-2"></div>
             <form method="POST" action="/logout">
                 @csrf
                 <button type="submit"
                     class="w-full flex items-center px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>
                     Log Out
                 </button>
             </form>

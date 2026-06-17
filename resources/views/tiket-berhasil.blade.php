@@ -28,7 +28,7 @@
                     
                     <div class="flex items-center gap-4">
                         <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>10.00 - 16.00 WIB</span>
+                        <span>{{ $tiket->sesi }}</span>
                     </div>
                     
                     <div class="flex items-center gap-4">
@@ -50,7 +50,26 @@
             <div class="w-full md:w-1/3 p-8 border-t md:border-t-0 md:border-l border-yellow-600/50 flex flex-col items-center justify-center bg-black/40">
                 
                 <div class="bg-white p-3 rounded-xl mb-4 w-40 h-40 flex items-center justify-center">
-                    {!! QrCode::size(130)->generate($tiket->kode_tiket) !!}
+                    @php
+                        // Membuat ringkasan jumlah tiket yang dibeli
+                        $rincian = [];
+                        if($tiket->jumlah_dewasa > 0) $rincian[] = $tiket->jumlah_dewasa . ' Dewasa';
+                        if($tiket->jumlah_mahasiswa > 0) $rincian[] = $tiket->jumlah_mahasiswa . ' Pelajar';
+                        if($tiket->jumlah_anak > 0) $rincian[] = $tiket->jumlah_anak . ' Anak';
+                        
+                        $rincian_tiket = implode(', ', $rincian); // Contoh hasil: "2 Dewasa, 1 Anak"
+
+                        // Membuat ringkasan data untuk isi QR Code
+                        $dataQr = json_encode([
+                            'Kode' => $tiket->kode_tiket,
+                            'Nama' => $tiket->nama_pengunjung,
+                            'Sesi' => $tiket->sesi,
+                            'Tanggal' => \Carbon\Carbon::parse($tiket->tgl_kunjungan)->format('d-m-Y'),
+                            'Tiket' => $rincian_tiket, // <--- TAMBAHAN RINCIAN DISINI
+                            'Total' => 'Rp ' . number_format($tiket->total_harga, 0, ',', '.')
+                        ]);
+                    @endphp
+                    {!! QrCode::size(130)->generate($dataQr) !!}
                 </div>
                 
                 <p class="text-xs text-gray-400 font-serif tracking-widest mb-1">Kode Tiket</p>
@@ -60,10 +79,16 @@
             </div>
             
         </div>
-        
-        <a href="{{ route('home') }}" class="mt-12 text-sm text-gray-400 hover:text-yellow-500 transition border-b border-transparent hover:border-yellow-500 pb-1 tracking-widest">
-            KEMBALI KE BERANDA
-        </a>
+       <div class="mt-12 flex flex-col items-center gap-5">
+            <a href="{{ route('tiket.pdf', $tiket->id_tiket) }}" class="bg-yellow-500 hover:bg-yellow-400 text-black font-bold tracking-widest px-8 py-4 rounded-full transition-all shadow-[0_0_20px_rgba(234,179,8,0.3)] flex items-center gap-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                UNDUH TIKET (PDF)
+            </a>
+            
+            <a href="{{ route('home') }}" class="text-sm text-gray-400 hover:text-yellow-500 transition border-b border-transparent hover:border-yellow-500 pb-1 tracking-widest mt-2">
+                KEMBALI KE BERANDA
+            </a>
+        </div>
 
     </div>
 </div>

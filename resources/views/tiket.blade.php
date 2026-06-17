@@ -16,6 +16,7 @@
             anak: { harga: 10000, jumlah: 0 }
         },
         tanggal: '',
+        sesi: '', // <--- TAMBAHAN: Variabel untuk menyimpan pilihan sesi
         errorHari: false,
         metodeBayar: 'Transfer Bank',
         
@@ -46,6 +47,7 @@
                    this.pemesan.telepon !== '' && 
                    this.pemesan.email !== '' && 
                    this.tanggal !== '' && 
+                   this.sesi !== '' && // <--- TAMBAHAN: Pastikan sesi juga wajib diisi
                    this.totalHarga > 0;
         },
 
@@ -59,6 +61,13 @@
 
     <div class="container mx-auto px-6 md:px-12 relative z-10">
         <h1 class="text-3xl md:text-4xl font-serif text-yellow-500 tracking-widest mb-10 text-center">PEMESANAN TIKET</h1>
+
+        @if(session('error'))
+            <div class="bg-red-600 text-white p-4 rounded-lg mb-8 shadow-lg border border-red-500/50 flex items-center gap-3">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <span class="font-medium">{{ session('error') }}</span>
+            </div>
+        @endif
 
         <form action="{{ route('tiket.store') }}" method="POST" class="flex flex-col lg:flex-row gap-10">
             @csrf
@@ -158,7 +167,24 @@
                 <div class="bg-[#111111]/90 backdrop-blur-sm border border-gray-800 p-8 rounded-xl shadow-lg">
                     <h2 class="text-xl font-serif text-yellow-500 tracking-wider mb-6 flex items-center gap-3">
                         <span class="bg-yellow-500 text-black w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm">4</span>
-                        METODE PEMBAYARAN
+                        PILIH SESI KUNJUNGAN
+                    </h2>
+                    
+                    <div class="relative">
+                        <select name="sesi" x-model="sesi" class="w-full bg-[#1A1A1A] border border-gray-800 p-4 rounded-lg text-white appearance-none focus:outline-none focus:border-yellow-500 cursor-pointer">
+                            <option value="" disabled selected>Pilih Sesi Kunjungan</option>
+                            <option value="Sesi 1 (10.00-12.00)">Sesi 1 (10.00 - 12.00 WIB)</option>
+                            <option value="Sesi 2 (13.00-15.00)">Sesi 2 (13.00 - 15.00 WIB)</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-[#111111]/90 backdrop-blur-sm border border-gray-800 p-8 rounded-xl shadow-lg">
+                    <h2 class="text-xl font-serif text-yellow-500 tracking-wider mb-6 flex items-center gap-3">
+                        <span class="bg-yellow-500 text-black w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm">5</span> METODE PEMBAYARAN
                     </h2>
                     
                     <div class="flex flex-col sm:flex-row gap-4">
@@ -210,7 +236,10 @@
 
                     <div class="border-t border-gray-800 pt-4 mb-6">
                         <span class="text-xs text-gray-500 uppercase tracking-wider block mb-1">Tanggal Kunjungan</span>
-                        <span x-text="tanggal ? new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : '-'" class="font-medium text-yellow-500"></span>
+                        <span x-text="tanggal ? new Date(tanggal).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : '-'" class="font-medium text-yellow-500 mb-3 block"></span>
+                        
+                        <span class="text-xs text-gray-500 uppercase tracking-wider block mb-1">Sesi Kunjungan</span>
+                        <span x-text="sesi ? sesi : '-'" class="font-medium text-yellow-500"></span>
                     </div>
 
                     <div class="border-t border-gray-800 pt-4 mb-8 flex justify-between items-end">
@@ -228,12 +257,13 @@
                     </button>
                     
                     <p x-show="!isFormValid" class="text-xs text-red-500 mt-4 text-center">
-                        *Lengkapi data pemesanan, tiket, dan tanggal kunjungan untuk melanjutkan pembayaran.
+                        *Lengkapi data pemesanan, tiket, sesi, dan tanggal kunjungan untuk melanjutkan pembayaran.
                     </p>
                 </div>
             </div>
 
-        </form> </div>
+        </form> 
+    </div>
 </div>
 
 @include('components.footer')
