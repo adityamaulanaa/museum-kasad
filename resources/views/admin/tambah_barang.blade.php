@@ -18,7 +18,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Nama
-                            Barang</label>
+                            Koleksi</label>
                         <input type="text" name="nama_barang" required placeholder="Contoh: Arca Buddha"
                             class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
                     </div>
@@ -43,21 +43,21 @@
                     </div>
 
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Bahan</label>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Bahan Baku</label>
                         <input type="text" name="bahan_barang" required placeholder="Contoh: Baja / Perunggu / Kayu"
                             class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Asal</label>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Asal Wilayah</label>
                     <input type="text" name="asal_barang" required
                         placeholder="Contoh: Kerajaan Majapahit / Hibah Kodam Diponegoro"
                         class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
                 </div>
 
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Deskripsi</label>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Deskripsi Koleksi</label>
                     <textarea name="deskripsi_barang" rows="4"
                         placeholder="Tuliskan latar belakang sejarah, fungsi, atau kondisi fisik barang saat ini..."
                         class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors resize-none"></textarea>
@@ -72,15 +72,14 @@
                         class="bg-[#161616] border border-dashed border-gray-800 rounded-xl p-4 text-center hover:border-[#d4af37]/50 transition-all relative group">
 
                         <input type="file" name="gambar_barang" id="file-input"
-                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
 
-                        <div id="dropzone-text" class="space-y-1 transition-all">
+                        <div id="dropzone-text" class="space-y-2 transition-all relative z-10">
                             <i
                                 class="fas fa-cloud-upload-alt text-2xl text-gray-500 group-hover:text-[#d4af37] transition-colors"></i>
                             <p class="text-xs text-gray-400">Klik atau seret file gambar ke sini</p>
-                            <p class="text-[10px] text-gray-600">PNG, JPG, JPEG (Max. 2MB)</p>
+                            <p class="text-[10px] text-gray-600 block">PNG, JPG, JPEG (Max. 2MB)</p>
                         </div>
-
                     </div>
                 </div>
 
@@ -99,22 +98,29 @@
         </div>
     </div>
     <script>
-        document.getElementById('file-input').addEventListener('change', function(e) {
-            const dropzone = document.getElementById('dropzone');
-            const textContainer = document.getElementById('dropzone-text');
+        document.querySelectorAll('#file-input').forEach(function(inputElement) {
 
-            if (this.files && this.files[0]) {
-                const fileName = this.files[0].name;
+            inputElement.addEventListener('change', function(e) {
+                const dropzone = this.closest('#dropzone');
+                const textContainer = dropzone.querySelector('#dropzone-text');
 
-                dropzone.classList.remove('border-gray-800', 'hover:border-[#d4af37]/50');
-                dropzone.classList.add('border-green-600', 'bg-[#121c14]');
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;
 
-                textContainer.innerHTML = `
-                <i class="fas fa-file-circle-check text-2xl text-green-500 animate-bounce"></i>
-                <p class="text-xs text-green-400 font-bold">File Terupload!</p>
-                <p class="text-[11px] text-gray-300 bg-[#1a2e20] py-1 px-3 rounded-md inline-block mt-1 border border-green-800/30 font-mono tracking-tight">${fileName}</p>
-            `;
-            }
+                    dropzone.classList.remove('border-gray-800', 'hover:border-[#d4af37]/50');
+                    dropzone.classList.add('border-green-600', 'bg-[#121c14]');
+
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        textContainer.innerHTML = `
+                        <img src="${event.target.result}" class="h-20 w-auto mx-auto rounded-lg border border-green-700 shadow-md mb-2 object-cover animate-fade-in">
+                        <p class="text-xs text-green-400 font-bold">File Baru Siap Diupload!</p>
+                        <p class="text-[10px] text-gray-300 bg-[#1a2e20] py-1 px-3 rounded-md inline-block mt-1 border border-green-800/30 font-mono tracking-tight max-w-full truncate">${fileName}</p>
+                    `;
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
         });
     </script>
 @endsection

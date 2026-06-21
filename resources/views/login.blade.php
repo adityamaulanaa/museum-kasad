@@ -24,8 +24,7 @@
             </div>
 
             <div class="space-y-3 w-full">
-                <h1
-                    class="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#e2ca52] tracking-wide leading-tight uppercase">
+                <h1 class="text-xl sm:text-[64px] font-bold text-[#e2ca52] tracking-wide leading-tight uppercase">
                     Selamat Datang
                 </h1>
                 <p

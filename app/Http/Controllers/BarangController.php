@@ -46,7 +46,7 @@ class BarangController extends Controller {
         if ($request->hasFile('gambar_barang')) {
             $cleanName = Str::slug($request->nama_barang);
             $imageName = $cleanName . '-' . time() . '.' . $request->gambar_barang->extension();
-            $request->gambar_barang->move(public_path('images/barang'), $imageName);
+            $request->gambar_barang->move(public_path('images/koleksi'), $imageName);
             $barang->gambar_barang = $imageName; 
         }
             $barang->save(); 
