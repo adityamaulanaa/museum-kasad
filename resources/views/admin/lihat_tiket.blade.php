@@ -2,7 +2,74 @@
 @section('title', 'Kelola Tiket - Museum KASAD')
 
 @section('content')
-    <div x-data="kontrolTiketUtama()" class="space-y-6 font-montserrat text-white">
+    <script>
+        // Membungkus data tiket dari server agar siap dibaca Alpine.js di atas
+        window.dataTiketBelumAdmin = @json($tiketBelumDipakai) || [];
+        window.dataTiketSudahAdmin = @json($tiketSudahDipakai) || [];
+    </script>
+
+    <div x-data="{
+        search: '',
+        filterTanggal: '',
+        filterStatus: 'Semua',
+        dropdownOpen: false,
+        modalOpen: false,
+        selectedTiket: null,
+        currentPage: 1,
+        itemsPerPage: 10,
+    
+        // Memetakan data tiket dengan logika expired di frontend
+        allItems: (() => {
+            const hariIni = new Date().toISOString().split('T')[0];
+    
+            const dataBelum = window.dataTiketBelumAdmin.map(i => {
+                const tglExpired = i.expired_at ? i.expired_at.split(' ')[0] : '';
+                const expired = tglExpired && tglExpired < hariIni;
+                return {
+                    ...i,
+                    status_tiket: expired ? 'Expired' : i.status_tiket,
+                    unique_id: 'b-' + i.id_tiket
+                };
+            });
+    
+            const dataSudah = window.dataTiketSudahAdmin.map(i => ({
+                ...i,
+                unique_id: 's-' + i.id_tiket
+            }));
+    
+            return [...dataBelum, ...dataSudah];
+        })(),
+    
+        get filteredItems() {
+            return this.allItems.filter(item => {
+                const keyword = this.search.toLowerCase();
+                const kode = item.kode_tiket ? item.kode_tiket.toLowerCase() : '';
+                const nama = item.nama_pengunjung ? item.nama_pengunjung.toLowerCase() : '';
+                const cocokSearch = kode.includes(keyword) || nama.includes(keyword);
+    
+                const cocokStatus = this.filterStatus === 'Semua' || item.status_tiket === this.filterStatus;
+    
+                const tglData = item.tgl_kunjungan ? item.tgl_kunjungan.split(' ')[0] : '';
+                const cocokTanggal = !this.filterTanggal || tglData === this.filterTanggal;
+    
+                return cocokSearch && cocokStatus && cocokTanggal;
+            });
+        },
+    
+        get pagedItems() {
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            return this.filteredItems.slice(start, start + this.itemsPerPage);
+        },
+    
+        get totalPages() {
+            return Math.ceil(this.filteredItems.length / this.itemsPerPage) || 1;
+        },
+    
+        bukaDetail(tiket) {
+            this.selectedTiket = tiket;
+            this.modalOpen = true;
+        }
+    }" class="space-y-6 font-montserrat text-white">
         <div class="space-y-3 mb-6">
             <div class="mb-4">
                 <h1 class="text-2xl sm:text-3xl font-bold tracking-wide text-white">Kelola Tiket Pengunjung</h1>
@@ -61,11 +128,11 @@
                     </div>
 
                     <div class="shrink-0 flex items-center mt-2 lg:mt-0 ml-auto lg:ml-0">
-                    <a href="/kelola_tiket/cetak_pdf"
-                        class="bg-blue-400 hover:bg-blue-500 text-black rounded-xl transition-all flex items-center justify-center min-w-[42px] min-h-[42px] p-2.5 shadow-lg shadow-blue-300/5">
-                        <i class="fas fa-file-pdf text-lg"></i>
-                    </a>
-                </div>
+                        <a href="/kelola_tiket/cetak_pdf"
+                            class="bg-blue-400 hover:bg-blue-500 text-black rounded-xl transition-all flex items-center justify-center min-w-[42px] min-h-[42px] p-2.5 shadow-lg shadow-blue-300/5">
+                            <i class="fas fa-file-pdf text-lg"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -175,40 +242,49 @@
             </div>
         </div>
 
-        <div x-show="totalPages > 1" class="px-2 py-2 flex flex-col sm:flex-row items-start gap-4 relative">
+        <div class="px-2 py-4 flex flex-col sm:flex-row items-start gap-4 relative">
+
             <nav class="flex items-center gap-4">
                 <div class="flex items-center gap-2 bg-[#161616] border border-gray-800 p-1 rounded-xl">
+
                     <button type="button" @click="if(currentPage > 1) currentPage--" :disabled="currentPage === 1"
                         :class="currentPage === 1 ? 'text-gray-700 cursor-not-allowed' : 'text-gray-400 hover:text-yellow-500'"
-                        class="p-2 transition focus:outline-none"><svg class="w-5 h-5" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
+                        class="p-2 transition focus:outline-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
                             </path>
-                        </svg></button>
+                        </svg>
+                    </button>
+
                     <template x-for="page in totalPages" :key="page">
                         <button type="button"
                             x-show="page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1"
                             @click="currentPage = page" x-text="page"
                             :class="currentPage === page ? 'bg-yellow-500 text-black font-bold' :
                                 'text-gray-400 hover:text-white'"
-                            class="px-3 py-1 text-xs font-semibold rounded-lg transition focus:outline-none"></button>
+                            class="px-3 py-1 text-xs font-semibold rounded-lg transition focus:outline-none">
+                        </button>
                     </template>
+
                     <button type="button" @click="if(currentPage < totalPages) currentPage++"
                         :disabled="currentPage === totalPages"
                         :class="currentPage === totalPages ? 'text-gray-700 cursor-not-allowed' :
                             'text-gray-400 hover:text-yellow-500'"
-                        class="p-2 transition focus:outline-none"><svg class="w-5 h-5" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
+                        class="p-2 transition focus:outline-none">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
                             </path>
-                        </svg></button>
+                        </svg>
+                    </button>
                 </div>
+
                 <div class="w-28">
-                    <select x-model="itemsPerPage" @change="currentPage = 1"
+                    <select x-model.number="itemsPerPage" @change="currentPage = 1"
                         class="block w-full px-2.5 py-2 bg-[#161616] border border-gray-800 text-gray-400 text-xs rounded-xl focus:border-[#e2ca52] focus:outline-none shadow-xs cursor-pointer">
-                        <option value="5">5 rows</option>
-                        <option value="10">10 rows</option>
-                        <option value="25">25 rows</option>
+                        <option value="5">5 data</option>
+                        <option value="10">10 data</option>
+                        <option value="25">25 data</option>
+                        <option value="50">50 data</option>
                     </select>
                 </div>
             </nav>
@@ -298,71 +374,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function kontrolTiketUtama() {
-            const hariIni = new Date().toISOString().split('T')[0];
-
-            const dataBelum = (@json($tiketBelumDipakai) || []).map(i => {
-                const tglExpired = i.expired_at ? i.expired_at.split(' ')[0] : '';
-                const expired = tglExpired && tglExpired < hariIni;
-
-                return {
-                    ...i,
-                    // Jika lewat tanggal, status_tiket diubah jadi 'Expired' di frontend
-                    status_tiket: expired ? 'Expired' : i.status_tiket,
-                    unique_id: 'b-' + i.id_tiket
-                };
-            });
-
-            const dataSudah = (@json($tiketSudahDipakai) || []).map(i => ({
-                ...i,
-                // dataSudah tetap pakai status_tiket asli ('Sudah Dipakai')
-                unique_id: 's-' + i.id_tiket
-            }));
-
-            return {
-                search: '',
-                filterTanggal: '',
-                filterStatus: 'Semua',
-                dropdownOpen: false,
-                modalOpen: false,
-                selectedTiket: null,
-                currentPage: 1,
-                itemsPerPage: 10,
-                allItems: [...dataBelum, ...dataSudah],
-
-                get filteredItems() {
-                    return this.allItems.filter(item => {
-                        const keyword = this.search.toLowerCase();
-                        const kode = item.kode_tiket ? item.kode_tiket.toLowerCase() : '';
-                        const nama = item.nama_pengunjung ? item.nama_pengunjung.toLowerCase() : '';
-                        const cocokSearch = kode.includes(keyword) || nama.includes(keyword);
-
-                        // Filter status sekarang langsung mengecek item.status_tiket
-                        const cocokStatus = this.filterStatus === 'Semua' || item.status_tiket === this
-                            .filterStatus;
-
-                        const tglData = item.tgl_kunjungan ? item.tgl_kunjungan.split(' ')[0] : '';
-                        const cocokTanggal = !this.filterTanggal || tglData === this.filterTanggal;
-                        return cocokSearch && cocokStatus && cocokTanggal;
-                    });
-                },
-
-                get pagedItems() {
-                    const start = (this.currentPage - 1) * this.itemsPerPage;
-                    return this.filteredItems.slice(start, start + this.itemsPerPage);
-                },
-
-                get totalPages() {
-                    return Math.ceil(this.filteredItems.length / this.itemsPerPage) || 1;
-                },
-
-                bukaDetail(tiket) {
-                    this.selectedTiket = tiket;
-                    this.modalOpen = true;
-                }
-            }
-        }
-    </script>
 @endsection

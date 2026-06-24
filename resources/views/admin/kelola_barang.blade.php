@@ -225,7 +225,7 @@
                 </div>
 
                 <div class="w-28">
-                    <select x-model="itemsPerPage" @change="currentPage = 1"
+                    <select x-model.number="itemsPerPage" @change="currentPage = 1"
                         class="block w-full px-2.5 py-2 bg-[#161616] border border-gray-800 text-gray-400 text-xs rounded-xl focus:border-[#e2ca52] focus:outline-none shadow-xs cursor-pointer">
                         <option value="5">5 data</option>
                         <option value="10">10 data</option>
@@ -235,6 +235,7 @@
                 </div>
             </nav>
         </div>
+        
         <div x-show="modalDetailOpen" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4"
             style="display: none;">
             <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" @click="modalDetailOpen = false"></div>
