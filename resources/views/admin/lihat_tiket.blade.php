@@ -191,6 +191,9 @@
                                     x-text="t.tgl_beli ? t.tgl_beli.split(' ')[0] : '-'"></td>
                                 <td class="px-5 py-4 text-center font-medium whitespace-nowrap"
                                     x-text="t.tgl_kunjungan ? t.tgl_kunjungan.split(' ')[0] : '-'"></td>
+                                
+                                <td class="px-5 py-4 text-center font-medium text-[10px] uppercase text-gray-400"
+                                    x-text="t.sesi || '-'"></td>
 
                                 <td class="px-5 py-4 text-center font-medium uppercase whitespace-nowrap"
                                     x-text="t.sesi || '-'"></td>
