@@ -13,22 +13,19 @@ class DashboardController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
 
-        // 1. Proteksi Login bawaan kamu
         if (!session()->has('admin_login')) {
             return redirect('/login');
         }
 
-        // 2. Ambil data statistik card (Tetap pakai Model Eloquent)
         $totalKoleksi = Barang::count(); 
         
         $awalBulan = date('Y-m-01');
         $hariIni = date('Y-m-d');
         
-        // 🔥 INI DIA: Tetap pakai Model, di-sum pakai \DB::raw murni untuk rumus nominal uang bulanan!
         // Ganti 15000, 10000, 12000 dengan harga tiket asli kamu ya
         $totalPenghasilanBulanIni = Tiket::whereBetween('tgl_kunjungan', [$awalBulan, $hariIni])
                             ->where('status_tiket', 'Sudah Dipakai')
-                            ->sum(DB::raw('(jumlah_dewasa * 15000) + (jumlah_anak * 10000) + (jumlah_mahasiswa * 12000)'));
+                            ->sum('total_harga');
 
         $totalTiketBulanIni = \App\Models\Tiket::whereBetween('tgl_kunjungan', [$awalBulan, $hariIni])
                         ->where('status_tiket', 'Sudah Dipakai')
@@ -42,8 +39,8 @@ class DashboardController extends Controller
             $tanggal = date('Y-m-d', strtotime("-$i days"));
             $grafikLabels[] = date('d M', strtotime($tanggal)); 
             
-            // Yang ini tetep hitung jumlah orang pake \DB::raw bawaan awal kamu
             $totalPengunjung = Tiket::whereDate('tgl_kunjungan', $tanggal)
+                                ->where('status_tiket', 'Sudah Dipakai')
                                 ->sum(DB::raw('jumlah_dewasa + jumlah_anak + jumlah_mahasiswa'));
                                 
             $grafikData[] = $totalPengunjung;

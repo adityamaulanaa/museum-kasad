@@ -70,7 +70,7 @@
                 
                 <div class="text-center w-full">
                     <p class="text-xs text-gray-400 font-serif tracking-widest mb-2 whitespace-nowrap block">Kode Tiket</p>
-                    <p class="text-yellow-500 font-bold tracking-wider text-sm md:text-base break-all leading-normal">
+                    <p class="text-yellow-500 font-bold tracking-wider text-sm md:text-base whitespace-nowrap leading-normal">
                         {{ $tiket->kode_tiket }}
                     </p>
                 </div>

@@ -66,7 +66,7 @@
                         borderWidth: 3,
                         backgroundColor: gradient,
                         fill: true,
-                        tension: 0.3, // Efek melengkung halus pada garis grafik
+                        tension: 0.5, // Efek melengkung halus pada garis grafik
                         pointBackgroundColor: '#e2ca52',
                         pointHoverRadius: 6
                     }]
