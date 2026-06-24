@@ -5,7 +5,7 @@
     <div x-data="kontrolTiketUtama()" class="space-y-6 font-montserrat text-white">
         <div class="space-y-3 mb-6">
             <div class="mb-4">
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-wide text-white">Kelola Tiket Pengunjung</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-wide text-white">Kelola Pemesanan Tiket</h1>
             </div>
 
             <div class="flex flex-col lg:flex-row gap-3 justify-between items-stretch lg:items-center mb-6 w-full">
@@ -63,7 +63,8 @@
         <div class="bg-[#111111] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden w-full">
             <div class="overflow-x-auto">
                 <table class="w-full text-left table-auto">
-                    <thead class="bg-[#1c1a12] text-[#e2ca52] text-xs uppercase font-bold tracking-wider border-b border-gray-800">
+                    <thead
+                        class="bg-[#1c1a12] text-[#e2ca52] text-sm uppercase font-bold tracking-wider border-b border-gray-800">
                         <tr>
                             <th class="px-5 py-4 text-center w-12">No</th>
                             <th class="px-5 py-4">Kode Tiket</th>
@@ -79,7 +80,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-800/50 text-sm">
                         <template x-for="(t, index) in pagedItems" :key="t.unique_id">
-                            <tr class="hover:bg-[#141414] transition-colors text-xs"
+                            <tr class="hover:bg-[#141414] transition-colors text-sm"
                                 :class="t.status_internal === 'Sudah Check-in' ? 'text-gray-500' : 'text-gray-200'">
                                 <td class="px-5 py-4 font-bold text-gray-600 text-center"
                                     x-text="(currentPage - 1) * itemsPerPage + index + 1"></td>

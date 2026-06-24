@@ -13,26 +13,63 @@
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Nama Barang</label>
-                    <input type="text" name="nama_barang" required value="{{ $barang->nama_barang }}" placeholder="Contoh: Arca Buddha" class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
+            <form action="/barang/{{ $barang->id_barang }}/update" method="POST" enctype="multipart/form-data"
+                class="space-y-5 font-montserrat">
+                @csrf
+                @method('PUT')
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Nama
+                            Koleksi</label>
+                        <input type="text" name="nama_barang" required value="{{ $barang->nama_barang }}"
+                            placeholder="Contoh: Arca Buddha"
+                            class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Kategori
+                            Koleksi</label>
+                        <select name="id_kategori" required
+                            class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-gray-300 text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
+                            <option value="" disabled>Pilih Kategori</option>
+                            @foreach ($categories as $cat)
+                                <option value="{{ $cat->id_kategori }}"
+                                    {{ $barang->id_kategori == $cat->id_kategori ? 'selected' : '' }}>
+                                    {{ $cat->nama_kategori }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Tahun Pembuatan /
+                            Temuan</label>
+                        <input type="number" name="tahun_barang" required value="{{ $barang->tahun_barang }}"
+                            placeholder="Contoh: 1945"
+                            class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Bahan Baku</label>
+                        <input type="text" name="bahan_barang" required value="{{ $barang->bahan_barang }}"
+                            placeholder="Contoh: Baja / Perunggu / Kayu"
+                            class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
+                    </div>
                 </div>
 
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Kategori Koleksi</label>
-                    <select name="id_kategori" required class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-gray-300 text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
-                        @foreach ($categories as $cat)
-                            <option value="{{ $cat->id_kategori }}" {{ $barang->id_kategori == $cat->id_kategori ? 'selected' : '' }}>
-                                {{ $cat->nama_kategori }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Asal Wilayah</label>
+                    <input type="text" name="asal_barang" required value="{{ $barang->asal_barang }}"
+                        placeholder="Contoh: Kerajaan Majapahit / Hibah Kodam Diponegoro"
+                        class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
                 </div>
 
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Tahun Pembuatan / Temuan</label>
-                    <input type="number" name="tahun_barang" required value="{{ $barang->tahun_barang }}" placeholder="Contoh: 1945" class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Deskripsi Koleksi</label>
+                    <textarea name="deskripsi_barang" rows="4"
+                        placeholder="Tuliskan latar belakang sejarah, fungsi, atau kondisi fisik barang saat ini..."
+                        class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors resize-none">{{ $barang->deskripsi_barang }}</textarea>
                 </div>
 
                 <div>
@@ -64,14 +101,23 @@
                         <p class="text-xs text-gray-400">Klik atau seret untuk mengganti foto</p>
                     </div>
                 </div>
-            </div>
-        </form> <div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-800/50 mt-4">
-            <button type="button" onclick="window.location.href='/kelola_barang'" class="text-gray-400 hover:text-white text-xs font-bold px-5 py-3 transition-colors uppercase tracking-wider cursor-pointer">
-                Batal
-            </button>
-            <button type="submit" form="edit-barang-form" class="bg-[#d4af37] hover:bg-[#bfa032] text-black text-xs font-bold px-6 py-3 rounded-xl transition-all uppercase tracking-wider shadow-lg shadow-[#d4af37]/10">
-                <i class="fas fa-save mr-1.5"></i> Simpan Perubahan
-            </button>
+
+                <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-800/50">
+                    <button type="button"
+                        @click="konfirmasi($el, 'Konfirmasi Keluar', 'Apakah Anda yakin ingin keluar? Semua perubahan yang belum disimpan akan hilang.', 'bg-red-600 hover:bg-red-700');
+                        document.getElementById('global-confirm-submit-btn').onclick = function() {
+                            window.location.href = '/kelola_barang';
+                        };"
+                        class="text-gray-400 hover:text-white text-xs font-bold px-5 py-3 transition-colors uppercase tracking-wider cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="bg-[#d4af37] hover:bg-[#bfa032] text-black text-xs font-bold px-6 py-3 rounded-xl transition-all uppercase tracking-wider shadow-lg shadow-[#d4af37]/10">
+                        <i class="fas fa-save mr-1.5"></i> Simpan Perubahan
+                    </button>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>

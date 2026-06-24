@@ -43,7 +43,7 @@
                 <i :class="sidebarOpen ? '' : 'mx-auto'"
                     class="fas fa-ticket-alt text-base w-5 text-center shrink-0"></i>
                 <span class="ml-4 text-xs tracking-widest uppercase transition-all" x-show="sidebarOpen">
-                    Kelola Tiket
+                    Kelola Pemesanan
                 </span>
             </a>
 

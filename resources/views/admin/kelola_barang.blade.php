@@ -112,7 +112,7 @@
                 <div class="shrink-0">
                     <a href="/tambah_barang"
                         class="bg-[#e2ca52] hover:bg-[#8f7626] text-black text-xs font-bold px-5 py-3 rounded-xl transition-all uppercase tracking-wider flex items-center justify-center space-x-2 w-full lg:w-auto">
-                        <i class="fas fa-plus text-[10px]"></i> <span>Tambah Barang</span>
+                        <i class="fas fa-plus text-[10px]"></i> <span>Tambah Koleksi</span>
                     </a>
                 </div>
 
@@ -123,10 +123,10 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead
-                        class="bg-[#1c1a12] text-[#e2ca52] text-xs uppercase font-bold tracking-wider border-b border-gray-800">
+                        class="bg-[#1c1a12] text-[#e2ca52] text-sm uppercase font-bold tracking-wider border-b border-gray-800">
                         <tr>
                             <th class="px-6 py-4 w-20 text-center">ID</th>
-                            <th class="px-6 py-4">Nama Barang</th>
+                            <th class="px-6 py-4">Nama Koleksi</th>
                             <th class="px-6 py-4">Kategori</th>
                             <th class="px-6 py-4">Diubah Oleh</th>
                             <th class="px-6 py-4 w-32 text-center">Aksi</th>
