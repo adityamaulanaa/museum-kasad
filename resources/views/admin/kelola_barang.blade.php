@@ -60,10 +60,17 @@
             </div>
 
             <div class="flex flex-col lg:flex-row gap-3 justify-between items-stretch lg:items-center mb-6 font-montserrat">
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-600 text-xs">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" x-model="search" @input="currentPage = 1"
+                        placeholder="Cari berdasarkan nama koleksi atau kategori..."
+                        class="w-full bg-[#111111] border border-gray-800 rounded-xl py-3 pl-10 pr-4 text-xs font-medium focus:border-[#e2ca52] focus:outline-none transition-all placeholder-gray-700 text-white">
+                </div>
 
-                <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center flex-1 max-w-3xl">
-
-                    <div class="relative w-64 sm:w-48 shrink-0">
+                <div class="shrink-0 flex flex-row flex-wrap lg:flex-nowrap items-center gap-2.5 mt-2 lg:mt-0">
+                    <div class="w-full sm:w-44 shrink-0 relative">
                         <button @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" type="button"
                             class="w-full bg-[#111111] border border-gray-800 text-gray-300 hover:text-white rounded-xl px-4 py-3 text-xs font-semibold flex items-center justify-between transition focus:outline-none cursor-pointer">
 
@@ -100,20 +107,17 @@
                         </div>
                     </div>
 
-                    <div class="relative w-64">
-                        <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-600 text-xs">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </span>
-                        <input type="text" x-model="search" @input="currentPage = 1" placeholder="Cari koleksi..."
-                            class="w-full bg-[#111111] border border-gray-800 rounded-xl py-3 pl-10 pr-4 text-xs font-medium focus:border-[#e2ca52] focus:outline-none transition-all placeholder-gray-700 text-white">
+                    <div class="shrink-0 flex flex-row items-center gap-2 mt-2 lg:mt-0 ml-auto lg:ml-0">
+                        <a href="/kelola_barang/cetak_pdf"
+                            class="bg-blue-400 hover:bg-blue-500 text-black rounded-xl transition-all flex items-center justify-center min-w-[42px] min-h-[42px] p-2.5 shadow-lg shadow-blue-300/5">
+                            <i class="fas fa-file-pdf text-lg"></i>
+                        </a>
+                        <a href="/tambah_barang"
+                            class="bg-[#e2ca52] hover:bg-[#8f7626] text-black rounded-xl transition-all flex items-center justify-center min-w-[42px] min-h-[42px] p-2.5 shadow-lg shadow-[#e2ca52]/5">
+                            <i class="fas fa-plus text-lg"></i>
+                        </a>
                     </div>
-                </div>
 
-                <div class="shrink-0">
-                    <a href="/tambah_barang"
-                        class="bg-[#e2ca52] hover:bg-[#8f7626] text-black text-xs font-bold px-5 py-3 rounded-xl transition-all uppercase tracking-wider flex items-center justify-center space-x-2 w-full lg:w-auto">
-                        <i class="fas fa-plus text-[10px]"></i> <span>Tambah Koleksi</span>
-                    </a>
                 </div>
 
             </div>
@@ -126,7 +130,7 @@
                         class="bg-[#1c1a12] text-[#e2ca52] text-sm uppercase font-bold tracking-wider border-b border-gray-800">
                         <tr>
                             <th class="px-6 py-4 w-20 text-center">ID</th>
-                            <th class="px-6 py-4">Nama Koleksi</th>
+                            <th class="px-6 py-4">Nama Barang</th>
                             <th class="px-6 py-4">Kategori</th>
                             <th class="px-6 py-4">Diubah Oleh</th>
                             <th class="px-6 py-4 w-32 text-center">Aksi</th>
@@ -135,13 +139,13 @@
                     <tbody class="divide-y divide-gray-800/50 text-sm">
                         <template x-for="(b, index) in pagedItems" :key="b.id_barang">
                             <tr class="hover:bg-[#141414] transition-colors">
-                                <td class="px-6 py-5 font-bold text-gray-500 text-center" x-text="b.id_barang"></td>
+                                <td class="px-6 py-5 font-medium text-gray-500 text-center" x-text="b.id_barang"></td>
                                 <td class="px-6 py-5 font-medium text-gray-200" x-text="b.nama_barang"></td>
-                                <td class="px-6 py-5 text-[10px] font-bold text-gray-400 uppercase tracking-wider"
+                                <td class="px-6 py-5 text-xs font-medium text-gray-400 uppercase tracking-wider"
                                     x-text="b.kategori_barang || '-'"></td>
-                                <td class="px-6 py-5 text-xs text-gray-400 font-medium">
+                                <td class="px-6 py-5 text-xs text-gray-400 font-medium ">
                                     <div class="flex items-center space-x-1.5">
-                                        <i class="fa-solid fa-user-shield text-[10px] text-[#e2ca52]"></i>
+                                        <i class="fa-solid fa-user text-[10px] text-[#e2ca52]"></i>
                                         <span x-text="b.admin ? b.admin.username : 'Admin'"></span>
                                     </div>
                                 </td>
@@ -239,17 +243,20 @@
                 class="bg-[#111111] border border-gray-800 w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl relative z-10 flex flex-col md:flex-row text-left min-h-[400px]">
 
                 <div
-                    class="w-full md:w-2/5 bg-white border-b md:border-b-0 md:border-r border-gray-800 flex items-center justify-center p-2 relative min-h-[250px] md:min-h-full">
+                    class="w-full md:w-2/5 bg-white border-b md:border-b-0 md:border-r border-gray-800 flex items-center justify-center p-4 relative min-h-[250px] md:h-auto md:self-stretch overflow-hidden rounded-t-xl md:rounded-tr-none md:rounded-l-xl">
+
                     <template x-if="selectedBarang && selectedBarang.gambar_barang">
                         <img :src="`/images/koleksi/${selectedBarang.gambar_barang}`" alt="Foto Koleksi"
-                            class="w-full h-full object-contain rounded-xl">
+                            class="max-h-full max-w-full object-contain filter">
                     </template>
+
                     <template x-if="!selectedBarang || !selectedBarang.gambar_barang">
-                        <div class="text-gray-600 flex flex-col items-center gap-2">
-                            <i class="fa-regular fa-image text-4xl"></i>
-                            <span class="text-xs">Tidak ada gambar</span>
+                        <div class="text-gray-400 flex flex-col items-center gap-2">
+                            <i class="fa-regular fa-image text-4xl text-gray-300"></i>
+                            <span class="text-xs font-medium">Tidak ada gambar</span>
                         </div>
                     </template>
+
                 </div>
 
                 <div class="w-full md:w-3/5 p-6 flex flex-col justify-between space-y-5 relative">

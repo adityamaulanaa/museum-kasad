@@ -5,12 +5,20 @@
     <div x-data="kontrolTiketUtama()" class="space-y-6 font-montserrat text-white">
         <div class="space-y-3 mb-6">
             <div class="mb-4">
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-wide text-white">Kelola Pemesanan Tiket</h1>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-wide text-white">Kelola Tiket Pengunjung</h1>
             </div>
 
             <div class="flex flex-col lg:flex-row gap-3 justify-between items-stretch lg:items-center mb-6 w-full">
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-600 text-xs">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" x-model="search" @input="currentPage = 1"
+                        placeholder="Cari berdasarkan kode tiket atau nama..."
+                        class="w-full bg-[#111111] border border-gray-800 rounded-xl py-3 pl-10 pr-4 text-xs font-medium focus:border-[#e2ca52] focus:outline-none transition-all placeholder-gray-700 text-white">
+                </div>
 
-                <div class="flex flex-col sm:flex-row gap-3 items-center">
+                <div class="shrink-0 flex flex-row flex-wrap lg:flex-nowrap items-center gap-2.5 mt-2 lg:mt-0">
 
                     <div class="w-full sm:w-44 shrink-0 relative">
                         <button @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" type="button"
@@ -23,21 +31,25 @@
                         </button>
 
                         <div x-show="dropdownOpen" x-transition.opacity
-                            class="absolute left-0 top-full mt-2 bg-[#111111] border border-gray-800 rounded-xl shadow-2xl py-1.5 w-full z-50 text-xs font-medium"
+                            class="absolute right-0 top-full mt-2 bg-[#111111] border border-gray-800 rounded-xl shadow-2xl py-1.5 w-full z-50 text-xs font-medium"
                             style="display: none;">
                             <button @click="filterStatus = 'Semua'; currentPage = 1; dropdownOpen = false" type="button"
                                 class="w-full text-left px-4 py-2.5 text-gray-400 hover:bg-[#161616] hover:text-[#e2ca52] transition-colors">
                                 Semua Status
                             </button>
-                            <button @click="filterStatus = 'Belum Check-in'; currentPage = 1; dropdownOpen = false"
+                            <button @click="filterStatus = 'Belum Dipakai'; currentPage = 1; dropdownOpen = false"
                                 type="button"
                                 class="w-full text-left px-4 py-2.5 text-gray-400 hover:bg-[#161616] hover:text-[#e2ca52] transition-colors">
-                                Belum Check-in
+                                Belum Dipakai
                             </button>
-                            <button @click="filterStatus = 'Sudah Check-in'; currentPage = 1; dropdownOpen = false"
+                            <button @click="filterStatus = 'Sudah Dipakai'; currentPage = 1; dropdownOpen = false"
                                 type="button"
                                 class="w-full text-left px-4 py-2.5 text-gray-400 hover:bg-[#161616] hover:text-[#e2ca52] transition-colors">
-                                Sudah Check-in
+                                Sudah Dipakai
+                            </button>
+                            <button @click="filterStatus = 'Expired'; currentPage = 1; dropdownOpen = false" type="button"
+                                class="w-full text-left px-4 py-2.5 text-gray-400 hover:bg-[#161616] hover:text-[#e2ca52] transition-colors">
+                                Expired
                             </button>
                         </div>
                     </div>
@@ -45,64 +57,57 @@
                     <div class="relative w-full sm:w-44 shrink-0">
                         <input type="date" x-model="filterTanggal" @change="currentPage = 1"
                             title="Filter Tanggal Kunjungan"
-                            class="w-full bg-[#111111] border border-gray-800 text-gray-400 hover:text-white rounded-xl px-3 py-3 text-xs font-semibold focus:border-[#e2ca52] focus:outline-none cursor-pointer uppercase tracking-wider transition-all">
+                            class="w-full bg-[#111111] border border-gray-800 text-gray-400 hover:text-white rounded-xl px-3 py-3 text-xs font-semibold focus:border-[#e2ca52] focus:outline-none cursor-pointer uppercase tracking-wider transition-all [color-scheme:dark]">
                     </div>
 
-
+                    <div class="shrink-0 flex items-center mt-2 lg:mt-0 ml-auto lg:ml-0">
+                    <a href="/kelola_tiket/cetak_pdf"
+                        class="bg-blue-400 hover:bg-blue-500 text-black rounded-xl transition-all flex items-center justify-center min-w-[42px] min-h-[42px] p-2.5 shadow-lg shadow-blue-300/5">
+                        <i class="fas fa-file-pdf text-lg"></i>
+                    </a>
                 </div>
-                <div class="relative w-full lg:max-w-md flex-1">
-                    <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-600 text-xs">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                    <input type="text" x-model="search" @input="currentPage = 1"
-                        placeholder="Cari berdasarkan kode tiket atau nama pengunjung..."
-                        class="w-full bg-[#111111] border border-gray-800 rounded-xl py-3 pl-10 pr-4 text-xs font-medium focus:border-[#e2ca52] focus:outline-none transition-all placeholder-gray-700 text-white">
                 </div>
-                {{-- <div class="shrink-0">
-                    <button onclick="window.print()" type="button"
-                        class="bg-[#d4af37] hover:bg-[#bfa032] text-black text-xs font-bold px-5 py-3.5 rounded-xl transition-all uppercase tracking-wider flex items-center justify-center space-x-2 w-full lg:w-auto cursor-pointer">
-                        <i class="fas fa-print text-xs"></i> <span>Cetak Laporan</span>
-                    </button>
-                </div> --}}
             </div>
         </div>
-
 
         <div class="bg-[#111111] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden w-full">
             <div class="overflow-x-auto">
                 <table class="w-full text-left table-auto">
                     <thead
-                        class="bg-[#1c1a12] text-[#e2ca52] text-sm uppercase font-bold tracking-wider border-b border-gray-800">
+                        class="bg-[#1c1a12] text-[#e2ca52] text-sm text-center uppercase font-bold tracking-wider border-b border-gray-800">
                         <tr>
-                            <th class="px-5 py-4 text-center w-12">No</th>
+                            <th class="px-5 py-4 w-12">No</th>
                             <th class="px-5 py-4">Kode Tiket</th>
                             <th class="px-5 py-4">Nama Pengunjung</th>
                             <th class="px-5 py-4 w-36 text-wrap">Kontak</th>
                             <th class="px-5 py-4">Jumlah Tiket</th>
-                            <th class="px-5 py-4 text-center">Total Harga</th>
-                            <th class="px-5 py-4 text-center">Tgl Kunjungan</th>
-                            <th class="px-5 py-4 text-center">Status</th>
-                            <th class="px-5 py-4 text-center w-36">Aksi</th>
+                            <th class="px-5 py-4">Total Harga</th>
+                            <th class="px-5 py-4">Tgl Beli</th>
+                            <th class="px-5 py-4">Tgl Kunjungan</th>
+                            <th class="px-5 py-4">Sesi</th>
+                            <th class="px-5 py-4">Status</th>
+                            <th class="px-5 py-4 w-36">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-800/50 text-sm">
                         <template x-for="(t, index) in pagedItems" :key="t.unique_id">
-                            <tr class="hover:bg-[#141414] transition-colors text-sm"
-                                :class="t.status_internal === 'Sudah Check-in' ? 'text-gray-500' : 'text-gray-200'">
+                            <tr class="hover:bg-[#141414] transition-colors"
+                                :class="t.status_tiket === 'Sudah Dipakai' || t.status_tiket === 'Expired' ? 'text-gray-500' :
+                                    'text-gray-200'">
                                 <td class="px-5 py-4 font-bold text-gray-600 text-center"
                                     x-text="(currentPage - 1) * itemsPerPage + index + 1"></td>
                                 <td class="px-5 py-4 font-mono font-bold"
-                                    :class="t.status_internal === 'Sudah Check-in' ? 'line-through text-gray-600' :
-                                        'text-[#e2ca52]'"
+                                    :class="t.status_tiket === 'Sudah Dipakai' || t.status_tiket === 'Expired' ?
+                                        'line-through text-gray-600' : 'text-[#e2ca52]'"
                                     x-text="t.kode_tiket || '-'"></td>
-                                <td class="px-5 py-4 max-w-[400px] font-medium" x-text="t.nama_pengunjung"></td>
+                                <td class="px-5 py-4 max-w-[200px] font-medium" x-text="t.nama_pengunjung"></td>
                                 <td class="px-5 py-4 max-w-[200px]">
                                     <div class="flex flex-col gap-0.5 break-words">
-                                        <div class="font-medium text-xs" x-text="t.email"></div>
-                                        <div class="text-[10px] text-gray-500 dynamic-telp" x-text="t.no_telp"></div>
+                                        <div class="font-medium" x-text="t.email"></div>
+                                        <div class=" text-gray-500 dynamic-telp" x-text="t.no_telp"></div>
                                     </div>
                                 </td>
-                                <td class="px-5 py-4 text-left space-y-0.5 text-gray-400">
+                                <td class="px-5 py-4 text-left space-y-0.5 whitespace-nowrap">
                                     <template x-if="parseInt(t.jumlah_dewasa) > 0">
                                         <div x-text="t.jumlah_dewasa + 'x Dewasa'"></div>
                                     </template>
@@ -113,17 +118,27 @@
                                         <div x-text="t.jumlah_mahasiswa + 'x Mahasiswa'"></div>
                                     </template>
                                 </td>
-                                <td class="px-5 py-4 text-center font-bold">Rp <span
+                                <td class="px-5 py-4 text-center font-bold whitespace-nowrap">Rp <span
                                         x-text="new Intl.NumberFormat('id-ID').format(t.total_harga)"></span></td>
-                                <td class="px-5 py-4 text-center font-medium"
+                                <td class="px-5 py-4 text-center font-medium whitespace-nowrap"
+                                    x-text="t.tgl_beli ? t.tgl_beli.split(' ')[0] : '-'"></td>
+                                <td class="px-5 py-4 text-center font-medium whitespace-nowrap"
                                     x-text="t.tgl_kunjungan ? t.tgl_kunjungan.split(' ')[0] : '-'"></td>
+
+                                <td class="px-5 py-4 text-center font-medium uppercase whitespace-nowrap"
+                                    x-text="t.sesi || '-'"></td>
 
                                 <td class="px-5 py-4 text-center">
                                     <span
-                                        class="inline-block whitespace-nowrap px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-tighter"
-                                        :class="t.status_internal === 'Sudah Check-in' ?
-                                            'bg-green-950/40 border border-green-800 text-green-400' :
-                                            'bg-yellow-950/40 border border-yellow-800 text-yellow-400'">
+                                        class="inline-block whitespace-nowrap px-2.5 py-1 rounded-full text-[12px] font-bold uppercase tracking-tighter"
+                                        :class="{
+                                            'bg-green-950/40 border border-green-800 text-green-400': t
+                                                .status_tiket === 'Sudah Dipakai',
+                                            'bg-yellow-950/40 border border-yellow-800 text-yellow-400': t
+                                                .status_tiket === 'Belum Dipakai',
+                                            'bg-red-950/40 border border-red-800 text-red-400': t
+                                                .status_tiket === 'Expired'
+                                        }">
                                         <span x-text="t.status_tiket"></span>
                                     </span>
                                 </td>
@@ -132,17 +147,17 @@
                                     <div class="flex items-center justify-center gap-2">
                                         <button type="button" @click="bukaDetail(t)"
                                             class="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 text-xs font-bold h-8 w-8 rounded-lg transition-all flex items-center justify-center cursor-pointer">
-                                            <i class="fa-solid fa-eye"></i>
+                                            <i class="fas fa-eye"></i>
                                         </button>
 
-                                        <template x-if="t.status_internal === 'Belum Check-in'">
+                                        <template x-if="t.status_tiket === 'Belum Dipakai'">
                                             <form :action="'/tiket/' + t.id_tiket + '/checkin'" method="POST"
                                                 class="m-0 p-0">
                                                 @csrf @method('PATCH')
                                                 <button type="button"
                                                     @click="konfirmasi($el, 'Konfirmasi Check-in', 'Apakah Anda yakin ingin melakukan check-in untuk kode tiket ' + t.kode_tiket + '?', 'bg-green-700 hover:bg-green-600')"
                                                     class="bg-green-700 hover:bg-green-600 text-white text-xs font-bold h-8 w-8 rounded-lg transition-all flex items-center justify-center cursor-pointer">
-                                                    <i class="fa-solid fa-check"></i>
+                                                    <i class="fas fa-check"></i>
                                                 </button>
                                             </form>
                                         </template>
@@ -152,7 +167,7 @@
                         </template>
 
                         <tr x-show="pagedItems.length === 0">
-                            <td colspan="9" class="p-8 text-center text-xs text-gray-500 italic">Tidak ada data tiket
+                            <td colspan="10" class="p-8 text-center text-xs text-gray-500 italic">Tidak ada data tiket
                                 pengunjung yang cocok dengan filter.</td>
                         </tr>
                     </tbody>
@@ -207,8 +222,12 @@
                 <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                     <div>
                         <h3 class="text-lg font-bold text-white tracking-wide">Detail Tiket Masuk</h3>
-                        <p class="text-[11px] font-bold mt-0.5"
-                            :class="selectedTiket?.status_internal === 'Sudah Check-in' ? 'text-green-500' : 'text-yellow-500'">
+                        <p class="text-[14px] font-bold mt-0.5"
+                            :class="{
+                                'text-green-500': selectedTiket?.status_tiket === 'Sudah Dipakai',
+                                'text-yellow-500': selectedTiket?.status_tiket === 'Belum Dipakai',
+                                'text-red-500': selectedTiket?.status_tiket === 'Expired'
+                            }">
                             Status: Tiket <span x-text="selectedTiket?.status_tiket"></span>
                         </p>
                     </div>
@@ -217,28 +236,34 @@
                             class="fas fa-times text-xs"></i></button>
                 </div>
                 <div class="space-y-3 text-gray-300">
-                    <div><label class="text-[10px] font-bold text-gray-500 uppercase block">Nama Pengunjung</label>
+                    <div><label class="text-[12px] font-bold text-gray-500 uppercase block">Nama Pengunjung</label>
                         <p class="text-sm font-semibold text-gray-200" x-text="selectedTiket?.nama_pengunjung || '-'"></p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] font-bold text-gray-500 uppercase block">Email</label>
+                        <div><label class="text-[12px] font-bold text-gray-500 uppercase block">Email</label>
                             <p class="text-xs font-medium break-words" x-text="selectedTiket?.email || '-'"></p>
                         </div>
-                        <div><label class="text-[10px] font-bold text-gray-500 uppercase block">No. Telepon</label>
+                        <div><label class="text-[12px] font-bold text-gray-500 uppercase block">No. Telepon</label>
                             <p class="text-xs font-medium" x-text="selectedTiket?.no_telp || '-'"></p>
                         </div>
                     </div>
+
                     <div class="grid grid-cols-2 gap-3 pt-2 border-t border-gray-800/40">
-                        <div><label class="text-[10px] font-bold text-gray-500 uppercase block">Metode Pembayaran</label>
-                            <p class="text-xs font-bold text-[#e2ca52] uppercase"
-                                x-text="selectedTiket?.metode_pembayaran || '-'"></p>
-                        </div>
-                        <div><label class="text-[10px] font-bold text-gray-500 uppercase block">Tanggal Kunjungan</label>
+                        <div><label class="text-[12px] font-bold text-gray-500 uppercase block">Tanggal Kunjungan</label>
                             <p class="text-xs font-medium"
                                 x-text="selectedTiket?.tgl_kunjungan ? selectedTiket.tgl_kunjungan.split(' ')[0] : '-'">
                             </p>
                         </div>
+                        <div><label class="text-[12px] font-bold text-gray-500 uppercase block">Sesi Kunjungan</label>
+                            <p class="text-xs font-bold text-[#e2ca52]" x-text="selectedTiket?.sesi || '-'"></p>
+                        </div>
                     </div>
+                    <div class="pt-2">
+                        <label class="text-[12px] font-bold text-gray-500 uppercase block">Metode Pembayaran</label>
+                        <p class="text-xs font-medium text-white uppercase"
+                            x-text="selectedTiket?.metode_pembayaran || '-'"></p>
+                    </div>
+
                 </div>
                 <div class="bg-[#161616] border border-gray-800/60 rounded-xl p-3 space-y-2 text-gray-300 font-medium">
                     <template x-if="selectedTiket && parseInt(selectedTiket.jumlah_dewasa) > 0">
@@ -276,14 +301,23 @@
 
     <script>
         function kontrolTiketUtama() {
-            const dataBelum = (@json($tiketBelumDipakai) || []).map(i => ({
-                ...i,
-                status_internal: 'Belum Check-in',
-                unique_id: 'b-' + i.id_tiket
-            }));
+            const hariIni = new Date().toISOString().split('T')[0];
+
+            const dataBelum = (@json($tiketBelumDipakai) || []).map(i => {
+                const tglExpired = i.expired_at ? i.expired_at.split(' ')[0] : '';
+                const expired = tglExpired && tglExpired < hariIni;
+
+                return {
+                    ...i,
+                    // Jika lewat tanggal, status_tiket diubah jadi 'Expired' di frontend
+                    status_tiket: expired ? 'Expired' : i.status_tiket,
+                    unique_id: 'b-' + i.id_tiket
+                };
+            });
+
             const dataSudah = (@json($tiketSudahDipakai) || []).map(i => ({
                 ...i,
-                status_internal: 'Sudah Check-in',
+                // dataSudah tetap pakai status_tiket asli ('Sudah Dipakai')
                 unique_id: 's-' + i.id_tiket
             }));
 
@@ -291,7 +325,7 @@
                 search: '',
                 filterTanggal: '',
                 filterStatus: 'Semua',
-                dropdownOpen: false, // 🛠️ PENYEMBUH: Supaya tombol klik dropdown gak macet lagi!
+                dropdownOpen: false,
                 modalOpen: false,
                 selectedTiket: null,
                 currentPage: 1,
@@ -305,12 +339,12 @@
                         const nama = item.nama_pengunjung ? item.nama_pengunjung.toLowerCase() : '';
                         const cocokSearch = kode.includes(keyword) || nama.includes(keyword);
 
-                        const cocokStatus = this.filterStatus === 'Semua' || item.status_internal === this
+                        // Filter status sekarang langsung mengecek item.status_tiket
+                        const cocokStatus = this.filterStatus === 'Semua' || item.status_tiket === this
                             .filterStatus;
 
                         const tglData = item.tgl_kunjungan ? item.tgl_kunjungan.split(' ')[0] : '';
                         const cocokTanggal = !this.filterTanggal || tglData === this.filterTanggal;
-
                         return cocokSearch && cocokStatus && cocokTanggal;
                     });
                 },

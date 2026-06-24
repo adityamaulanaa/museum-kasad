@@ -4,21 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\TiketController;
+use App\Http\Controllers\DashboardController;
 
+// ==================== BAGIAN ADMIN ====================
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::get('/dashboard', function () {
-    if (!session()->has('admin_login')) {
-        return redirect('/login');
-    }
-
-    $totalKoleksi = \App\Models\Barang::count();
-    $tiketHariIni = \App\Models\Tiket::whereDate('tgl_kunjungan', date('Y-m-d'))->count();
-
-    return view('admin.dashboard', compact('totalKoleksi', 'tiketHariIni'));
-});
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/kelola_barang', function (\Illuminate\Http\Request $request) {
     if (!session()->has('admin_login')) {
@@ -54,6 +47,8 @@ Route::delete('/barang/{id}/delete', function ($id) {
     return redirect('/kelola_barang')->with('success', 'Barang berhasil dihapus dari koleksi!');
 });
 
+Route::get('/kelola_barang/cetak_pdf', [BarangController::class, 'cetakPdf']);
+
 Route::get('/lihat_tiket', function () {
     if (!session()->has('admin_login')) { 
         return redirect('/login'); 
@@ -77,6 +72,10 @@ Route::delete('/tiket/{id}/delete', function ($id) {
     return back()->with('success', 'Tiket berhasil dihapus!');
 });
 
+Route::get('/kelola_tiket/cetak_pdf', [TiketController::class, 'cetakLaporanPdf']);
+
+
+// ==================== BAGIAN PENGUNJUNG ====================
 Route::get('/', function () { return view('home'); })->name('home');
 Route::get('/about', function () { return view('about'); })->name('about');
 
@@ -99,3 +98,5 @@ Route::post('/tiket/pesan', [TiketController::class, 'store'])->name('tiket.stor
 
 // Rute untuk menampilkan halaman QR Code / Tiket Berhasil
 Route::get('/tiket/berhasil/{id}', [TiketController::class, 'sukses'])->name('tiket.sukses');
+
+Route::get('/tiket/{id}/pdf', [\App\Http\Controllers\TiketController::class, 'cetakPDF'])->name('tiket.pdf');

@@ -59,8 +59,9 @@
             <div class="border-t border-gray-800 my-2"></div>
             <form method="POST" action="/logout">
                 @csrf
-                <button type="submit"
-                    class="w-full flex items-center px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 transition-colors">
+                <button type="button"
+                    onclick="konfirmasi(this, 'Log Out', 'Apakah Anda yakin ingin keluar dari Dashboard Admin?', 'bg-red-600 hover:bg-red-700')"
+                    class="w-full flex items-center px-4 py-3 text-sm text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer">
                     <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i>
                     Log Out
                 </button>

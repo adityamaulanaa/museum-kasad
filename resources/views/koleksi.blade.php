@@ -56,6 +56,7 @@
                         <button @click="selectedCategory = 'Seni Rupa'; dropdownOpen = false" class="w-full text-left px-4 py-2 text-sm hover:bg-yellow-500 hover:text-black transition">Seni Rupa</button>
                         <button @click="selectedCategory = 'Historika'; dropdownOpen = false" class="w-full text-left px-4 py-2 text-sm hover:bg-yellow-500 hover:text-black transition">Historika</button>
                         <button @click="selectedCategory = 'Keramologika'; dropdownOpen = false" class="w-full text-left px-4 py-2 text-sm hover:bg-yellow-500 hover:text-black transition">Keramologika</button>
+                        <button @click="selectedCategory = 'Geologika'; dropdownOpen = false" class="w-full text-left px-4 py-2 text-sm hover:bg-yellow-500 hover:text-black transition">Geologika</button>
                     </div>
                 </div>
             </div>

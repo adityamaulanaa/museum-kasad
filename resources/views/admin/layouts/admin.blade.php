@@ -11,7 +11,7 @@
 </head>
 
 <body class="h-full text-gray-200 antialiased font-montserrat [x-cloak] { display: none !important; }"
-    x-data="{ sidebarOpen: window.innerWidth >= 640 }">
+    x-data="{ sidebarOpen: false }">
 
 
     <div class="flex h-screen overflow-hidden">
@@ -69,7 +69,7 @@
                             </div>
 
                             <h3 id="global-confirm-title" class="text-lg font-bold text-white">Konfirmasi Aksi</h3>
-                            <p id="global-confirm-msg" class="text-xs text-gray-400 mt-2 leading-relaxed">Apakah Anda
+                            <p id="global-confirm-msg" class="text-sm text-gray-400 mt-2 leading-relaxed">Apakah Anda
                                 yakin ingin melanjutkan tindakan ini?</p>
 
                             <div
