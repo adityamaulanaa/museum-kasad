@@ -15,7 +15,7 @@ class BarangController extends Controller {
         $barangs = Barang::with(['kategori', 'admin'])->get(); 
         $categories = Kategori::all(); 
         
-        return view('admin.kelola_barang', compact('barangs'));
+        return view('admin.kelola_barang', compact('barangs', 'categories'));
     }
 
     public function create() {
@@ -38,16 +38,24 @@ class BarangController extends Controller {
         $barang->tahun_barang = $request->tahun_barang;
         $barang->bahan_barang = $request->bahan_barang;
         $barang->asal_barang = $request->asal_barang;
-        $barang->kategori_barang = $barang->kategori->nama_kategori ?? $barang->kategori->kategori ?? '-';
+
+        $kategori = \App\Models\Kategori::where('id_kategori', $request->id_kategori)->first();
+        $barang->kategori_barang = $kategori ? $kategori->nama_kategori : '-';
+
+        $barang->deskripsi_barang = $request->deskripsi_barang;
+        $barang->id_admin = session('id_admin');
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
         $barang->id_admin = session('id_admin');
 
+        // 2. Proses upload gambar (Kita pakai cara temenmu yang rapi namanya pake slug, tapi path foldernya tetap aman)
         if ($request->hasFile('gambar_barang')) {
             $cleanName = Str::slug($request->nama_barang);
             $imageName = $cleanName . '-' . time() . '.' . $request->gambar_barang->extension();
             $request->gambar_barang->move(public_path('images/koleksi'), $imageName);
-            $barang->gambar_barang = $imageName; 
+            
+            $barang->gambar_barang = $imageName;
+            
         }
             $barang->save(); 
 
@@ -79,21 +87,44 @@ class BarangController extends Controller {
         $barang->tahun_barang = $request->tahun_barang;
         $barang->bahan_barang = $request->bahan_barang;
         $barang->asal_barang = $request->asal_barang;
-        $barang->kategori_barang = $barang->kategori->nama_kategori ?? $barang->kategori->kategori ?? '-';
+
+        $kategori = \App\Models\Kategori::where('id_kategori', $request->id_kategori)->first();
+        $barang->kategori_barang = $kategori ? $kategori->nama_kategori : '-';
+
+        $barang->deskripsi_barang = $request->deskripsi_barang;
+        $barang->id_admin = session('id_admin');
+
         $barang->deskripsi_barang = $request->deskripsi_barang;
         
         $barang->id_admin = session('id_admin');
 
+        // 2. Proses upload gambar (Kita pakai cara temenmu yang rapi namanya pake slug, tapi path foldernya tetap aman)
         if ($request->hasFile('gambar_barang')) {
-            $cleanName = Str::slug($request->nama_barang);
+            $cleanName = \Illuminate\Support\Str::slug($request->nama_barang);
             $imageName = $cleanName . '-' . time() . '.' . $request->gambar_barang->extension();
             $request->gambar_barang->move(public_path('images/koleksi'), $imageName);
+            
             $barang->gambar_barang = $imageName;
         }
 
         $barang->save(); 
 
         return redirect('/kelola_barang')->with('success', 'Data barang berhasil diubah!');
+    }
+
+    public function cetakPdf()
+    {
+        // Ambil semua data barang beserta kategorinya
+        $barangs = Barang::with('kategori')->get();
+        
+        // Load view khusus cetak dan lempar data koleksinya
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.cetak_koleksi_pdf', compact('barangs'));
+        
+        // Set ukuran kertas ke A4 Landscape biar tabelnya muat lebar
+        $pdf->setPaper('a4', 'landscape');
+        
+        // Download otomatis dengan nama file berikut
+        return $pdf->download('Laporan_Koleksi_Museum_KASAD_' . date('Ymd') . '.pdf');
     }
 
 }

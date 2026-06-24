@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tiket;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TiketController extends Controller
 {
@@ -15,7 +16,7 @@ class TiketController extends Controller
         
         $jumlahTerpesan = Tiket::where('tgl_kunjungan', $request->tgl_kunjungan)
                                 ->where('sesi', $request->sesi)
-                                ->sum(\DB::raw('jumlah_dewasa + jumlah_mahasiswa + jumlah_anak'));
+                                ->sum(DB::raw('jumlah_dewasa + jumlah_mahasiswa + jumlah_anak'));
 
         $totalBaru = $request->jumlah_dewasa + $request->jumlah_mahasiswa + $request->jumlah_anak;
 
@@ -26,7 +27,7 @@ class TiketController extends Controller
 
         // 2. Buat Kode Unik & Atur Kedaluwarsa (2 Hari dari Waktu Kunjungan)
         $kode_tiket = 'KASAD' . date('Ymd') . rand(1000, 9999);
-        $expired_at = Carbon::parse($request->tgl_kunjungan)->addDays(2);
+        $expired_at = Carbon::parse($request->tgl_kunjungan)->addDays(1);
 
         // 3. Simpan Data Ke Database
         $tiket = Tiket::create([
@@ -58,9 +59,17 @@ class TiketController extends Controller
     {
         $tiket = Tiket::findOrFail($id);
         
-        // VALIDASI KEDALUWARSA: Jika waktu sekarang melewati batas 'expired_at'
-        if (Carbon::now()->gt($tiket->expired_at)) {
+        // VALIDASI KEDALUWARSA: Cek berdasarkan tanggal hari ini (hanya Y-m-d agar sinkron dengan frontend)
+        $hariIni = \Carbon\Carbon::today();
+        $tglExpired = \Carbon\Carbon::parse($tiket->expired_at)->startOfDay();
+
+        if ($hariIni->gt($tglExpired)) {
             return redirect()->back()->with('error', 'Tiket ' . $tiket->kode_tiket . ' Gagal Check-in karena sudah kedaluwarsa!');
+        }
+        
+        // Tambahan proteksi: Jika tiket sudah pernah dipakai sebelumnya
+        if ($tiket->status_tiket === 'Sudah Dipakai') {
+            return redirect()->back()->with('error', 'Tiket ' . $tiket->kode_tiket . ' sudah pernah digunakan!');
         }
         
         $tiket->update([
@@ -92,12 +101,31 @@ class TiketController extends Controller
         ]);
 
         // 3. Ubah QR Code menjadi format gambar (Base64) agar bisa dibaca oleh PDF
-        $qrcode = base64_encode(\QrCode::format('svg')->size(150)->generate($dataQr));
+        $qrcode = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(150)->generate($dataQr));
 
         // 4. Proses pembuatan PDF
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('tiket-pdf', compact('tiket', 'qrcode'));
         
         // 5. Unduh otomatis
         return $pdf->download('Tiket-Museum-KASAD-' . $tiket->kode_tiket . '.pdf');
+    }
+
+    public function cetakLaporanPdf()
+    {
+        // Ambil data tiket. Asumsi nama model kamu adalah Tiket
+        $tikets = \App\Models\Tiket::orderBy('tgl_kunjungan', 'desc')->get();
+        
+        // Konversi status tiket secara dinamis di backend untuk data expired (meniru logika Javascript di halaman blade)
+        $hariIni = date('Y-m-d');
+        foreach ($tikets as $t) {
+            if ($t->status_tiket === 'Belum Dipakai' && $t->expired_at && date('Y-m-d', strtotime($t->expired_at)) < $hariIni) {
+                $t->status_tiket = 'Expired';
+            }
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.cetak_laporan_tiket_pdf', compact('tikets'));
+        $pdf->setPaper('a4', 'landscape'); // Set Landscape agar tabel data muat lebar ke samping
+
+        return $pdf->download('Laporan_Pemesanan_Tiket_Museum_' . date('Ymd') . '.pdf');
     }
 }
