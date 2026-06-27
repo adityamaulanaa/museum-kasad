@@ -11,7 +11,7 @@ class Barang extends Model
 
     protected $table = 'barang';
     protected $primaryKey = 'id_barang'; 
-    public $timestamps = false; 
+    public $timestamps = true; 
 
     protected $fillable = [
         'nama_barang',
@@ -24,6 +24,11 @@ class Barang extends Model
         'gambar_barang',
         'id_admin'
     ];
+
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('d-m-Y H:i:s');
+    }
 
     public function kategori()
     {

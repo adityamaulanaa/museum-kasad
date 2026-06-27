@@ -188,9 +188,11 @@
                                 <td class="px-5 py-4 text-center font-bold whitespace-nowrap">Rp <span
                                         x-text="new Intl.NumberFormat('id-ID').format(t.total_harga)"></span></td>
                                 <td class="px-5 py-4 text-center font-medium whitespace-nowrap"
-                                    x-text="t.tgl_beli ? t.tgl_beli.split(' ')[0] : '-'"></td>
+                                    x-text="t.tgl_beli ? t.tgl_beli.split(' ')[0].split('-').reverse().join('-') : '-'">
+                                </td>
                                 <td class="px-5 py-4 text-center font-medium whitespace-nowrap"
-                                    x-text="t.tgl_kunjungan ? t.tgl_kunjungan.split(' ')[0] : '-'"></td>
+                                    x-text="t.tgl_kunjungan ? t.tgl_kunjungan.split(' ')[0].split('-').reverse().join('-') : '-'">
+                                </td>
                                 <td class="px-5 py-4 text-center font-medium uppercase whitespace-nowrap"
                                     x-text="t.sesi || '-'"></td>
 
@@ -325,8 +327,8 @@
 
                     <div class="grid grid-cols-2 gap-3 pt-2 border-t border-gray-800/40">
                         <div><label class="text-[12px] font-bold text-gray-500 uppercase block">Tanggal Kunjungan</label>
-                            <p class="text-xs font-medium"
-                                x-text="selectedTiket?.tgl_kunjungan ? selectedTiket.tgl_kunjungan.split(' ')[0] : '-'">
+                            <p class="text-xs font-bold text-[#e2ca52]"
+                                x-text="selectedTiket?.tgl_kunjungan ? selectedTiket.tgl_kunjungan.split(' ')[0].split('-').reverse().join('-') : '-'">
                             </p>
                         </div>
                         <div><label class="text-[12px] font-bold text-gray-500 uppercase block">Sesi Kunjungan</label>

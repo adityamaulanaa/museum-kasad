@@ -73,13 +73,15 @@
     <table>
         <thead>
             <tr>
-                <th width="5%">No</th>
-                <th width="15%">Foto</th>
-                <th width="20%">Nama Barang</th>
-                <th width="15%">Kategori</th>
-                <th width="10%">Tahun</th>
-                <th width="15%">Bahan</th>
-                <th width="20%">Asal</th>
+                <th width="4%">No</th>
+                <th width="12%">Foto</th>
+                <th width="18%">Nama Barang</th>
+                <th width="12%">Kategori</th>
+                <th width="8%">Tahun</th>
+                <th width="12%">Bahan</th>
+                <th width="14%">Asal</th>
+                <th width="10%">Tgl. Ditambah</th>
+                <th width="10%">Tgl. Diubah</th>
             </tr>
         </thead>
         <tbody>
@@ -107,6 +109,12 @@
                     <td class="text-center">{{ $b->tahun_barang }}</td>
                     <td>{{ $b->bahan_barang }}</td>
                     <td>{{ $b->asal_barang }}</td>
+                    <td class="text-center" style="font-size: 11px;">
+                        {{ $b->created_at ? $b->created_at->format('Y-m-d') : '-' }}
+                    </td>
+                    <td class="text-center" style="font-size: 11px; font-weight: bold;">
+                        {{ $b->updated_at ? $b->updated_at->format('Y-m-d') : '-' }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>

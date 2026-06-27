@@ -18,15 +18,27 @@
     
         get filteredItems() {
             return this.items.filter(item => {
-                const keyword = this.search.toLowerCase();
-                const nama = item.nama_barang ? item.nama_barang.toLowerCase() : '';
-                const namaAdmin = (item.admin && item.admin.username) ? item.admin.username.toLowerCase() : '';
+                    const keyword = this.search.toLowerCase();
+                    const nama = item.nama_barang ? item.nama_barang.toLowerCase() : '';
+                    const namaAdmin = (item.admin && item.admin.username) ? item.admin.username.toLowerCase() : '';
     
-                const cocokSearch = nama.includes(keyword) || namaAdmin.includes(keyword);
-                const cocokKategori = this.selectedCategory === 'Semua' || item.kategori_barang === this.selectedCategory;
+                    const cocokSearch = nama.includes(keyword) || namaAdmin.includes(keyword);
+                    const cocokKategori = this.selectedCategory === 'Semua' || item.kategori_barang === this.selectedCategory;
     
-                return cocokSearch && cocokKategori;
-            });
+                    return cocokSearch && cocokKategori;
+                })
+                .sort((a, b) => {
+                    // 1. Urutkan berdasarkan waktu updated_at terbaru (ubah ke format milidetik)
+                    const waktuB = a.updated_at ? new Date(b.updated_at).getTime() : 0;
+                    const waktuA = a.updated_at ? new Date(a.updated_at).getTime() : 0;
+    
+                    if (waktuB !== waktuA) {
+                        return waktuB - waktuA; // Yang barusan di-update langsung melesat ke atas
+                    }
+    
+                    // 2. Kalau waktu updated_at-nya sama (efek data lama hasil import), paksa urutkan dari ID terbesar
+                    return b.id_barang - a.id_barang;
+                });
         },
     
         get pagedItems() {
@@ -129,25 +141,40 @@
                     <thead
                         class="bg-[#1c1a12] text-[#e2ca52] text-sm uppercase font-bold tracking-wider border-b border-gray-800">
                         <tr>
+                            <th class="px-6 py-4 w-20 text-center">No</th>
                             <th class="px-6 py-4 w-20 text-center">ID</th>
                             <th class="px-6 py-4">Nama Barang</th>
                             <th class="px-6 py-4">Kategori</th>
-                            <th class="px-6 py-4">Diubah Oleh</th>
+                            <th class="px-6 py-4 text-center">Diubah Oleh</th>
+                            <th class="px-6 py-4 text-center">Tanggal Ditambah</th>
+                            <th class="px-6 py-4 text-center">Tanggal Diubah</th>
                             <th class="px-6 py-4 w-32 text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-800/50 text-sm">
                         <template x-for="(b, index) in pagedItems" :key="b.id_barang">
                             <tr class="hover:bg-[#141414] transition-colors">
-                                <td class="px-6 py-5 font-medium text-gray-500 text-center" x-text="b.id_barang"></td>
+                                <td class="px-6 py-5 font-medium text-gray-500 text-center"
+                                    x-text="(currentPage - 1) * itemsPerPage + index + 1"></td>
+                                <td class="px-6 py-5 font-mono font-bold text-[#e2ca52] text-center" x-text="b.id_barang">
+                                </td>
                                 <td class="px-6 py-5 font-medium text-gray-200" x-text="b.nama_barang"></td>
-                                <td class="px-6 py-5 text-xs font-medium text-gray-400 uppercase tracking-wider"
+                                <td class="px-6 py-5 font-medium text-gray-400 text-center"
                                     x-text="b.kategori_barang || '-'"></td>
-                                <td class="px-6 py-5 text-xs text-gray-400 font-medium ">
-                                    <div class="flex items-center space-x-1.5">
-                                        <i class="fa-solid fa-user text-[10px] text-[#e2ca52]"></i>
+                                <td class="px-6 py-5 text-gray-400 font-medium text-center">
+                                    <div class="flex items-center justify-center space-x-1.5">
+                                        <i class="fa-solid fa-user text-[#e2ca52]"></i>
                                         <span x-text="b.admin ? b.admin.username : 'Admin'"></span>
                                     </div>
+                                </td>
+                                <td class="px-6 py-5 text-center text-gray-400 font-medium">
+                                    <div x-text="b.created_at ? b.created_at.split(' ')[0] : '-'"></div>
+                                    <div x-text="b.created_at ? b.created_at.split(' ')[1] : '-'"></div>
+                                </td>
+
+                                <td class="px-6 py-5 text-center text-gray-400 font-medium">
+                                    <div x-text="b.updated_at ? b.updated_at.split(' ')[0] : '-'"></div>
+                                    <div x-text="b.updated_at ? b.updated_at.split(' ')[1] : '-'"></div>
                                 </td>
                                 <td class="px-6 py-5">
                                     <div class="flex items-center justify-center gap-2">
@@ -235,7 +262,7 @@
                 </div>
             </nav>
         </div>
-        
+
         <div x-show="modalDetailOpen" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center p-4"
             style="display: none;">
             <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" @click="modalDetailOpen = false"></div>

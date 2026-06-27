@@ -12,7 +12,9 @@ class BarangController extends Controller {
     
     public function index()
     {
-        $barangs = Barang::with(['kategori', 'admin'])->get(); 
+        $barangs = Barang::with(['kategori', 'admin'])
+                         ->latest('updated_at')
+                         ->get(); 
         $categories = Kategori::all(); 
         
         return view('admin.kelola_barang', compact('barangs', 'categories'));

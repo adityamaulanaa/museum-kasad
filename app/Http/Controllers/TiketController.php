@@ -116,9 +116,9 @@ class TiketController extends Controller
         $tikets = \App\Models\Tiket::orderBy('tgl_kunjungan', 'desc')->get();
         
         // Konversi status tiket secara dinamis di backend untuk data expired (meniru logika Javascript di halaman blade)
-        $hariIni = date('Y-m-d');
+        $hariIni = date('d-m-Y');
         foreach ($tikets as $t) {
-            if ($t->status_tiket === 'Belum Dipakai' && $t->expired_at && date('Y-m-d', strtotime($t->expired_at)) < $hariIni) {
+            if ($t->status_tiket === 'Belum Dipakai' && $t->expired_at && date('d-m-Y', strtotime($t->expired_at)) < $hariIni) {
                 $t->status_tiket = 'Expired';
             }
         }
@@ -126,6 +126,6 @@ class TiketController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.cetak_laporan_tiket_pdf', compact('tikets'));
         $pdf->setPaper('a4', 'landscape'); // Set Landscape agar tabel data muat lebar ke samping
 
-        return $pdf->download('Laporan_Pemesanan_Tiket_Museum_' . date('Ymd') . '.pdf');
+        return $pdf->download('Laporan_Pemesanan_Tiket_Museum_' . date('dmY') . '.pdf');
     }
 }
