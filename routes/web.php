@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\TiketController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HalamanController;
 
 // ==================== BAGIAN ADMIN ====================
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -74,10 +75,19 @@ Route::delete('/tiket/{id}/delete', function ($id) {
 
 Route::get('/kelola_tiket/cetak_pdf', [TiketController::class, 'cetakLaporanPdf']);
 
+Route::get('/kelola_halaman', [HalamanController::class, 'edit'])->name('halaman.edit');
+Route::put('/kelola_halaman/update', [HalamanController::class, 'update'])->name('halaman.update');
+
 
 // ==================== BAGIAN PENGUNJUNG ====================
 Route::get('/', function () { return view('home'); })->name('home');
-Route::get('/about', function () { return view('about'); })->name('about');
+Route::get('/about', function () {
+    // Ambil baris pertama dari tabel about menggunakan Model
+    $aboutData = \App\Models\About::first(); 
+    
+    // Lempar data ke file view about.blade.php
+    return view('about', compact('aboutData'));
+})->name('about');
 
 // Rute Koleksi (Hanya ada SATU dan mengambil data dari database)
 Route::get('/koleksi', function () {

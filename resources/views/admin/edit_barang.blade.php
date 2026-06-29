@@ -2,33 +2,41 @@
 @section('title', 'Edit Barang - Museum KASAD')
 
 @section('content')
-<div class="space-y-6">
-    <div class="mb-4">
-        <h1 class="text-2xl sm:text-3xl font-bold text-white">Edit Koleksi Museum</h1>
-        <p class="text-xs text-gray-500 mt-1">Perbarui data koleksi atau barang bersejarah yang sudah ada di dalam sistem.</p>
-    </div>
+    <div class="space-y-6">
+        <div class="mb-4">
+            <h1 class="text-2xl sm:text-3xl font-bold text-white">Edit Koleksi Museum</h1>
+            <p class="text-xs text-gray-500 mt-1">Perbarui data koleksi atau barang bersejarah yang sudah ada di dalam
+                sistem.</p>
+        </div>
 
-    <div class="bg-[#111111] border border-gray-800 rounded-2xl shadow-2xl p-6 w-full">
-        <form id="edit-barang-form" action="/barang/{{ $barang->id_barang }}/update" method="POST" enctype="multipart/form-data" class="space-y-5 font-montserrat">
-            @csrf
-            @method('PUT')
+        <div class="bg-[#111111] border border-gray-800 rounded-2xl shadow-2xl p-6 w-full">
+            <form id="edit-barang-form" action="/barang/{{ $barang->id_barang }}/update" method="POST"
+                enctype="multipart/form-data" class="space-y-5 font-montserrat">
+                @csrf
+                @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Nama Barang</label>
-                    <input type="text" name="nama_barang" required value="{{ $barang->nama_barang }}" placeholder="Contoh: Arca Buddha" class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Nama
+                            Barang</label>
+                        <input type="text" name="nama_barang" required value="{{ $barang->nama_barang }}"
+                            placeholder="Contoh: Arca Buddha"
+                            class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-white text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
+                    </div>
 
-                <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Kategori Koleksi</label>
-                    <select name="id_kategori" required class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-gray-300 text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
-                        @foreach ($categories as $cat)
-                            <option value="{{ $cat->id_kategori }}" {{ $barang->id_kategori == $cat->id_kategori ? 'selected' : '' }}>
-                                {{ $cat->nama_kategori }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Kategori
+                            Koleksi</label>
+                        <select name="id_kategori" required
+                            class="w-full bg-[#161616] border border-gray-800 rounded-xl p-3 text-gray-300 text-sm focus:border-[#d4af37] focus:outline-none transition-colors">
+                            @foreach ($categories as $cat)
+                                <option value="{{ $cat->id_kategori }}"
+                                    {{ $barang->id_kategori == $cat->id_kategori ? 'selected' : '' }}>
+                                    {{ $cat->nama_kategori }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Tahun
@@ -63,6 +71,7 @@
                 <div id="dropzone"
                     class="bg-[#161616] border border-dashed border-gray-800 rounded-xl p-4 text-center hover:border-[#d4af37]/50 transition-all relative group">
                     <input type="file" name="gambar_barang" id="file-input"
+                        accept="image/png, image/jpeg, image/jpg, image/webp"
                         class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
                     <div id="dropzone-text" class="space-y-2 transition-all relative z-10">
                         @if ($barang->gambar_barang)
@@ -97,19 +106,20 @@
         </form>
     </div>
     </div>
-</div>
+    </div>
 
-<script>
-    document.getElementById('file-input').addEventListener('change', function(e) {
-        const dropzone = document.getElementById('dropzone');
-        const textContainer = document.getElementById('dropzone-text');
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                textContainer.innerHTML = `<img src="${event.target.result}" class="h-20 w-auto mx-auto rounded-lg shadow-md mb-2 object-cover"><p class="text-xs text-green-400 font-bold">File Baru Siap!</p>`;
+    <script>
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const dropzone = document.getElementById('dropzone');
+            const textContainer = document.getElementById('dropzone-text');
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    textContainer.innerHTML =
+                        `<img src="${event.target.result}" class="h-20 w-auto mx-auto rounded-lg shadow-md mb-2 object-cover"><p class="text-xs text-green-400 font-bold">File Baru Siap!</p>`;
+                }
+                reader.readAsDataURL(this.files[0]);
             }
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-</script>
+        });
+    </script>
 @endsection

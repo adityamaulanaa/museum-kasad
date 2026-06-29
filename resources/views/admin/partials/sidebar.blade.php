@@ -48,6 +48,16 @@
                 </span>
             </a>
 
+            <a href="/kelola_halaman" :class="sidebarOpen ? 'px-3' : 'justify-center px-0'"
+                class="flex items-center py-3 transition-all group
+                {{ Request::is('kelola_halaman*') ? 'text-[#d4af37] bg-[#1a1a1a]/50 border-b-2 border-[#d4af37] rounded-t-lg font-bold' : 'text-gray-400 hover:text-[#d4af37] hover:bg-[#151515] font-medium' }}">
+                <i :class="sidebarOpen ? '' : 'mx-auto'" class="fas fa-layer-group text-base w-5 text-center shrink-0"></i>
+                <span :class="sidebarOpen ? 'sm:block' : 'sm:hidden'"
+                    class="ml-4 text-xs tracking-widest uppercase transition-all sm:block" x-show="sidebarOpen">
+                    Kelola Halaman
+                </span>
+            </a>
+
         </nav>
     </div>
 

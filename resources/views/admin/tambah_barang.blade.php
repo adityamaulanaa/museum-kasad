@@ -72,6 +72,7 @@
                         class="bg-[#161616] border border-dashed border-gray-800 rounded-xl p-4 text-center hover:border-[#d4af37]/50 transition-all relative group">
 
                         <input type="file" name="gambar_barang" id="file-input" required
+                            accept="image/png, image/jpeg, image/jpg, image/webp"
                             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
 
                         <div id="dropzone-text" class="space-y-2 transition-all relative z-10">
