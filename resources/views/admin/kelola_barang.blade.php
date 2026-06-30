@@ -168,13 +168,19 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-5 text-center text-gray-400 font-medium">
-                                    <div x-text="b.created_at ? b.created_at.split(' ')[0] : '-'"></div>
-                                    <div x-text="b.created_at ? b.created_at.split(' ')[1] : '-'"></div>
+                                    <div
+                                        x-text="b.created_at ? b.created_at.split(' ')[0].split('-').reverse().join('-') : '-'">
+                                    </div>
+                                    <div x-text="b.created_at ? b.created_at.split(' ')[1] : '-'">
+                                    </div>
                                 </td>
 
                                 <td class="px-6 py-5 text-center text-gray-400 font-medium">
-                                    <div x-text="b.updated_at ? b.updated_at.split(' ')[0] : '-'"></div>
-                                    <div x-text="b.updated_at ? b.updated_at.split(' ')[1] : '-'"></div>
+                                    <div
+                                        x-text="b.updated_at ? b.updated_at.split(' ')[0].split('-').reverse().join('-') : '-'">
+                                    </div>
+                                    <div x-text="b.updated_at ? b.updated_at.split(' ')[1] : '-'">
+                                    </div>
                                 </td>
                                 <td class="px-6 py-5">
                                     <div class="flex items-center justify-center gap-2">

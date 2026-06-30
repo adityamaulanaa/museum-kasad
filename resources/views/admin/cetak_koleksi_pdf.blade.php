@@ -110,10 +110,10 @@
                     <td>{{ $b->bahan_barang }}</td>
                     <td>{{ $b->asal_barang }}</td>
                     <td class="text-center" style="font-size: 11px;">
-                        {{ $b->created_at ? $b->created_at->format('Y-m-d') : '-' }}
+                        {{ $b->created_at ? $b->created_at->format('d-m-Y') : '-' }}
                     </td>
                     <td class="text-center" style="font-size: 11px; font-weight: bold;">
-                        {{ $b->updated_at ? $b->updated_at->format('Y-m-d') : '-' }}
+                        {{ $b->updated_at ? $b->updated_at->format('d-m-Y') : '-' }}
                     </td>
                 </tr>
             @endforeach

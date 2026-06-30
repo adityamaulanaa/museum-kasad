@@ -118,7 +118,7 @@ class TiketController extends Controller
         // Konversi status tiket secara dinamis di backend untuk data expired (meniru logika Javascript di halaman blade)
         $hariIni = date('d-m-Y');
         foreach ($tikets as $t) {
-            if ($t->status_tiket === 'Belum Dipakai' && $t->expired_at && date('d-m-Y', strtotime($t->expired_at)) < $hariIni) {
+            if ($t->status_tiket === 'Belum Dipakai' && $t->expired_at && date('Y-m-d', strtotime($t->expired_at)) < $hariIni) {
                 $t->status_tiket = 'Expired';
             }
         }
